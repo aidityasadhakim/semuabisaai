@@ -1,0 +1,32 @@
+# Caddyfile for production deployment
+# Usage: docker compose -f docker-compose.prod.yml up
+
+{
+    # Email for Let's Encrypt notifications
+    email {$SSL_EMAIL}
+}
+
+{$DOMAIN_NAME} {
+    # Reverse proxy to backend API
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+
+    # Serve static frontend files
+    handle {
+        root * /srv
+        try_files {path} /index.html
+        file_server
+    }
+
+    # Enable compression
+    encode gzip
+
+    # Security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+}

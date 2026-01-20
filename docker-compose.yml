@@ -1,0 +1,70 @@
+# ====================
+# Fastship - Development Docker Compose
+# ====================
+# Usage: make dev (or docker compose up --build)
+
+services:
+  # ====================
+  # PostgreSQL Database (Optional - uncomment to use)
+  # ====================
+  # db:
+  #   image: postgres:16-alpine
+  #   container_name: fastship-db
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_USER:-fastship}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fastship_secret}
+  #     POSTGRES_DB: ${POSTGRES_DB:-fastship_db}
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fastship}"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+
+  # ====================
+  # Backend (Go + Echo)
+  # ====================
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    container_name: fastship-backend
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    environment:
+      DATABASE_PATH: ${DATABASE_PATH:-/app/data/fastship.db}
+      # DATABASE_URL: ${DATABASE_URL:-postgres://fastship:fastship_secret@db:5432/fastship_db?sslmode=disable}
+      BACKEND_PORT: ${BACKEND_PORT:-8080}
+      BACKEND_HOST: ${BACKEND_HOST:-0.0.0.0}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-}
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data
+      - go_modules:/go/pkg/mod
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+
+  # ====================
+  # Frontend (React + Vite)
+  # ====================
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    container_name: fastship-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+      VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY:-}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  # postgres_data:
+  go_modules:

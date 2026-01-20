@@ -1,0 +1,34 @@
+-- +goose Up
+-- ====================
+-- Initial Migration Template
+-- ====================
+-- This is an empty migration template. Add your schema here.
+--
+-- SQLite Example:
+-- CREATE TABLE users (
+--     id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     clerk_id TEXT UNIQUE NOT NULL,
+--     email TEXT UNIQUE NOT NULL,
+--     name TEXT NOT NULL,
+--     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+-- );
+--
+-- PostgreSQL Example:
+-- CREATE TABLE users (
+--     id SERIAL PRIMARY KEY,
+--     clerk_id TEXT UNIQUE NOT NULL,
+--     email VARCHAR(255) UNIQUE NOT NULL,
+--     name VARCHAR(255) NOT NULL,
+--     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+--     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- );
+
+-- +goose Down
+-- ====================
+-- Rollback Migration
+-- ====================
+-- Add DROP TABLE statements here in reverse order of creation.
+--
+-- Example:
+-- DROP TABLE IF EXISTS users;
