@@ -1,0 +1,5 @@
+{
+  "name": "Declare your style name here",
+  "description": "Declare your style description here",
+  "instruction": "Extract style from user references and then write it into this json"
+}

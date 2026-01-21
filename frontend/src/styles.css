@@ -1,25 +1,30 @@
 @import 'tailwindcss';
 
 /* ====================
- * Custom CSS Variables
+ * Spaceman - Sci-Fi Terminal Theme
+ * Brutalist, retro-futuristic space aesthetic
  * ==================== */
 :root {
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
-  --color-primary-light: #60a5fa;
-  --color-background: #ffffff;
-  --color-foreground: #0a0a0a;
-  --color-muted: #737373;
-  --color-border: #e5e5e5;
+  --color-primary: #ffffff;
+  --color-primary-dark: #cccccc;
+  --color-primary-light: #ffffff;
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --color-muted: #666666;
+  --color-border: #333333;
+  --color-accent: #ffffff;
+
+  /* Terminal text patterns */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
 }
 
-/* Dark mode */
+/* Dark mode (same as light for this theme) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #0a0a0a;
-    --color-foreground: #fafafa;
-    --color-muted: #a3a3a3;
-    --color-border: #262626;
+    --color-background: #000000;
+    --color-foreground: #ffffff;
+    --color-muted: #666666;
+    --color-border: #333333;
   }
 }
 
@@ -27,15 +32,10 @@
  * Base Styles
  * ==================== */
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
+  font-family: var(--font-mono);
   background-color: var(--color-background);
   color: var(--color-foreground);
+  letter-spacing: 0.05em;
 }
 
 /* ====================
@@ -52,5 +52,95 @@ body {
 
 /* Focus ring for accessibility */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-black;
+}
+
+/* ====================
+ * Terminal Text Patterns
+ * ==================== */
+.terminal-prefix {
+  opacity: 0.6;
+}
+
+.terminal-text {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+}
+
+/* Decorative crosshair */
+.crosshair {
+  position: relative;
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+.crosshair::before {
+  width: 1px;
+  height: 20px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.crosshair::after {
+  width: 20px;
+  height: 1px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Star decoration */
+.star-4 {
+  position: relative;
+  display: inline-block;
+}
+
+.star-4::before {
+  content: '+';
+  font-size: 0.8em;
+}
+
+/* Scan line effect */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.scanline-effect::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Subtle flicker */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  97% { opacity: 0.9; }
+  98% { opacity: 1; }
+}
+
+.flicker {
+  animation: flicker 4s infinite;
 }

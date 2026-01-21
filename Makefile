@@ -69,7 +69,7 @@ status:
 	docker compose ps
 
 # ================================
-# Database Operations
+# Database Operations (SQLite)
 # ================================
 
 ## Install goose CLI locally
@@ -82,7 +82,7 @@ db-create:
 	@touch $(DB_PATH)
 	@echo "Database created at $(DB_PATH)"
 
-## Run database migrations (SQLite)
+## Run database migrations
 db-migrate:
 	goose -dir $(MIGRATIONS_DIR) sqlite3 $(DB_PATH) up
 
@@ -102,26 +102,6 @@ db-reset:
 ## Open SQLite shell
 db-shell:
 	sqlite3 $(DB_PATH)
-
-# ================================
-# Database Operations (PostgreSQL - if using Docker)
-# ================================
-
-## Run migrations in Docker (PostgreSQL)
-db-migrate-docker:
-	docker compose exec backend goose -dir /app/sql/migrations postgres "$(DATABASE_URL)" up
-
-## Rollback migration in Docker (PostgreSQL)
-db-rollback-docker:
-	docker compose exec backend goose -dir /app/sql/migrations postgres "$(DATABASE_URL)" down
-
-## Check migration status in Docker (PostgreSQL)
-db-status-docker:
-	docker compose exec backend goose -dir /app/sql/migrations postgres "$(DATABASE_URL)" status
-
-## Open PostgreSQL shell in Docker
-db-shell-docker:
-	docker compose exec db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
 
 # ================================
 # Code Generation
@@ -238,8 +218,59 @@ init:
 
 ## Show this help
 help:
-	@echo "Fastship - Available Commands"
 	@echo ""
-	@awk 'BEGIN {FS = ":.*##"; printf "Usage: make \033[36m<target>\033[0m\n\n"} \
-		/^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } \
-		/^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) }' $(MAKEFILE_LIST)
+	@echo "Fastship - Available Commands"
+	@echo "=============================="
+	@echo ""
+	@echo "Usage: make \033[36m<target>\033[0m"
+	@echo ""
+	@echo "\033[1mLocal Development:\033[0m"
+	@echo "  \033[36mdev\033[0m                 Start all services with hot-reload (Docker)"
+	@echo "  \033[36mdev-detach\033[0m          Start all services in background"
+	@echo "  \033[36mdev-backend\033[0m         Start backend only (local, no Docker)"
+	@echo "  \033[36mdev-frontend\033[0m        Start frontend only (local, no Docker)"
+	@echo "  \033[36mdown\033[0m                Stop all services"
+	@echo "  \033[36mlogs\033[0m                View all logs"
+	@echo "  \033[36mlogs-service\033[0m        View specific service logs (SERVICE=backend)"
+	@echo "  \033[36mrestart\033[0m             Restart a service (SERVICE=backend)"
+	@echo "  \033[36mstatus\033[0m              Check service status"
+	@echo ""
+	@echo "\033[1mDatabase (SQLite):\033[0m"
+	@echo "  \033[36mdb-create\033[0m           Create database directory and file"
+	@echo "  \033[36mdb-migrate\033[0m          Run database migrations"
+	@echo "  \033[36mdb-rollback\033[0m         Rollback last migration"
+	@echo "  \033[36mdb-status\033[0m           Check migration status"
+	@echo "  \033[36mdb-reset\033[0m            Reset database (rollback all + migrate)"
+	@echo "  \033[36mdb-shell\033[0m            Open SQLite shell"
+	@echo ""
+	@echo "\033[1mCode Generation:\033[0m"
+	@echo "  \033[36msqlc\033[0m                Generate SQLC code (local)"
+	@echo "  \033[36msqlc-docker\033[0m         Generate SQLC code (Docker)"
+	@echo "  \033[36msqlc-install\033[0m        Install sqlc CLI locally"
+	@echo "  \033[36mgoose-install\033[0m       Install goose CLI locally"
+	@echo ""
+	@echo "\033[1mCode Quality:\033[0m"
+	@echo "  \033[36mtest\033[0m                Run all tests"
+	@echo "  \033[36mtest-backend\033[0m        Run backend tests"
+	@echo "  \033[36mtest-frontend\033[0m       Run frontend tests"
+	@echo "  \033[36mlint\033[0m                Run linters"
+	@echo "  \033[36mcheck\033[0m               Run format + lint fix"
+	@echo ""
+	@echo "\033[1mFrontend:\033[0m"
+	@echo "  \033[36mfrontend-install\033[0m    Install frontend dependencies"
+	@echo "  \033[36mfrontend-build\033[0m      Build frontend for production"
+	@echo ""
+	@echo "\033[1mProduction (Docker):\033[0m"
+	@echo "  \033[36mprod-up\033[0m             Start production environment"
+	@echo "  \033[36mprod-down\033[0m           Stop production environment"
+	@echo "  \033[36mprod-logs\033[0m           View production logs"
+	@echo "  \033[36mprod-rebuild\033[0m        Rebuild and restart production"
+	@echo ""
+	@echo "\033[1mCleanup:\033[0m"
+	@echo "  \033[36mclean\033[0m               Remove containers, volumes, and images"
+	@echo "  \033[36mclean-volumes\033[0m       Remove only volumes"
+	@echo "  \033[36mclean-db\033[0m            Remove SQLite database"
+	@echo ""
+	@echo "\033[1mSetup:\033[0m"
+	@echo "  \033[36minit\033[0m                Initialize project (first-time setup)"
+	@echo ""
