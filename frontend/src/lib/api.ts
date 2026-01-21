@@ -48,7 +48,12 @@ export async function apiFetch<T>(endpoint: string, options: RequestOptions = {}
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(error.error || `API error: ${response.status}`)
+    throw new Error(error.error || error.message || `API error: ${response.status}`)
+  }
+
+  // Handle 204 No Content and empty responses
+  if (response.status === 204 || response.headers.get('content-length') === '0') {
+    return undefined as T
   }
 
   return response.json()

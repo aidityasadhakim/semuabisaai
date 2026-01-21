@@ -21,8 +21,8 @@ RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
 WORKDIR /app
 
-# Copy go.mod first for caching
-COPY go.mod ./
+# Copy go.mod and go.sum first for caching
+COPY go.mod go.sum* ./
 RUN go mod download
 
 # Copy the rest of the source code
@@ -43,8 +43,8 @@ FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
-# Copy go.mod first for caching
-COPY go.mod ./
+# Copy go.mod and go.sum first for caching
+COPY go.mod go.sum* ./
 RUN go mod download
 
 # Copy source code

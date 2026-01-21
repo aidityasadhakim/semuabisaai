@@ -8,7 +8,7 @@ function SignUpPage() {
         routing="path"
         path="/auth/sign-up"
         signInUrl="/auth/sign-in"
-        afterSignUpUrl="/"
+        forceRedirectUrl="/"
       />
     </div>
   )
