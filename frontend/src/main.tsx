@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ClerkProvider } from '@clerk/react'
+import { idID } from '@clerk/localizations/id-ID'
 
 import { routeTree } from './routeTree.gen'
 import './styles.css'
@@ -40,7 +41,7 @@ if (!rootElement.innerHTML) {
   if (clerkPubKey) {
     root.render(
       <StrictMode>
-        <ClerkProvider publishableKey={clerkPubKey}>
+        <ClerkProvider publishableKey={clerkPubKey} localization={idID}>
           <QueryClientProvider client={queryClient}>
             <RouterProvider router={router} />
           </QueryClientProvider>

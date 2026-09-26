@@ -1,83 +1,110 @@
-import { SignIn, useUser } from '@clerk/react'
+import { SignIn, useAuth, useUser } from '@clerk/react'
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
+import { apiFetch } from '@/lib/api'
 import { isClerkConfigured } from '@/lib/clerk'
 
 function JoinWithClerk() {
   const { isLoaded, isSignedIn, user } = useUser()
-  const [isSaving, setIsSaving] = useState(false)
+  const { getToken } = useAuth()
+  const [joined, setJoined] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [hasJoined, setHasJoined] = useState(false)
+
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) return
+    let active = true
+    getToken()
+      .then((token) =>
+        apiFetch<{ joined: boolean }>('/api/waitlist', {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }),
+      )
+      .then((status) => {
+        if (active) setJoined(status.joined)
+      })
+      .catch(() => {
+        if (active) setError('Status waiting list belum dapat dimuat.')
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [getToken, isLoaded, isSignedIn])
 
   if (!isLoaded) return <p className="join-status">Memuat akun...</p>
-
-  if (!isSignedIn) {
+  if (!isSignedIn)
     return (
       <div className="clerk-panel">
         <SignIn routing="hash" signUpUrl="/auth/sign-up" forceRedirectUrl="/join" />
       </div>
     )
-  }
-
-  const joinedAt = user.unsafeMetadata.waitlistJoinedAt
-  const joined = hasJoined || typeof joinedAt === 'string'
-  const email = user.primaryEmailAddress?.emailAddress
 
   async function joinWaitlist() {
-    if (!user || !email || joined) return
-    setIsSaving(true)
+    setSaving(true)
     setError('')
     try {
-      await user.updateMetadata({ unsafeMetadata: { waitlistJoinedAt: new Date().toISOString() } })
-      setHasJoined(true)
+      const token = await getToken()
+      await apiFetch('/api/waitlist', {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: { onboardingId: sessionStorage.getItem('sba_onboarding_id') || '' },
+      })
+      sessionStorage.removeItem('sba_onboarding_id')
+      setJoined(true)
     } catch {
-      setError('Belum berhasil menyimpan. Coba lagi sebentar.')
+      setError('Belum berhasil masuk waiting list. Coba lagi sebentar.')
     } finally {
-      setIsSaving(false)
+      setSaving(false)
     }
   }
 
   return (
     <div className="join-account">
-      {joined ? (
+      {loading ? (
+        <p className="join-status">Memeriksa pendaftaran...</p>
+      ) : joined ? (
         <>
           <span className="join-check" aria-hidden="true">
             ✓
           </span>
-          <h2>Anda sudah masuk daftar.</h2>
+          <h2>Kamu sudah masuk waiting list.</h2>
           <p>
-            Alamat: <strong>{email}</strong>
+            Alamat: <strong>{user.primaryEmailAddress?.emailAddress}</strong>
           </p>
+          <Link className="join-link" to="/ask">
+            Tanyakan tentang Semua Bisa AI
+          </Link>
         </>
       ) : (
         <>
           <p className="join-account-label">Akun terhubung</p>
           <h2>Satu langkah lagi.</h2>
           <p>
-            Masuk waiting list dengan <strong>{email}</strong>.
+            Masuk waiting list dengan <strong>{user.primaryEmailAddress?.emailAddress}</strong>.
+            Setelah itu kamu bisa mengajukan lima pertanyaan.
           </p>
           <button
             className="join-link join-button"
             type="button"
             onClick={joinWaitlist}
-            disabled={isSaving || !email}
+            disabled={saving || !user.primaryEmailAddress?.emailAddress}
           >
-            {isSaving ? 'Menyimpan...' : 'Konfirmasi masuk daftar'}
-            <span aria-hidden="true">↗</span>
+            {saving ? 'Menyimpan...' : 'Konfirmasi masuk waiting list'}
           </button>
-          {!email && (
-            <p className="join-error">
-              Akun ini belum memiliki alamat email. Tambahkan email di akun Clerk Anda untuk
-              melanjutkan.
-            </p>
-          )}
-          {error && (
-            <p className="join-error" role="alert">
-              {error}
-            </p>
+          {!user.primaryEmailAddress?.emailAddress && (
+            <p className="join-error">Tambahkan alamat email di akunmu untuk melanjutkan.</p>
           )}
         </>
+      )}
+      {error && (
+        <p className="join-error" role="alert">
+          {error}
+        </p>
       )}
     </div>
   )
@@ -93,8 +120,9 @@ function JoinPage() {
       </header>
       <main className="join-main page-width">
         <div className="join-intro">
-          <h1>Satu langkah lagi. Masa depan juga milikmu.</h1>
-          <p>Masuk dengan Google atau email.</p>
+          <p className="eyebrow">Waiting list</p>
+          <h1>Bergabung.</h1>
+          <p>Masuk dengan Google atau email untuk menerima kabar kegiatan berikutnya.</p>
         </div>
         <div className="join-card">
           {isClerkConfigured() ? (
@@ -102,9 +130,7 @@ function JoinPage() {
           ) : (
             <div className="join-account">
               <h2>Pendaftaran belum aktif.</h2>
-              <p>
-                Tambahkan key Clerk di <code>.env</code> pada root proyek.
-              </p>
+              <p>Konfigurasi akun belum tersedia.</p>
             </div>
           )}
         </div>

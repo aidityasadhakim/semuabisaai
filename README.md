@@ -1,34 +1,33 @@
 # Semua Bisa AI
 
-Landing page awal untuk gerakan belajar AI bagi masyarakat Indonesia. Struktur halaman ada di `frontend/src/routes/index.tsx`. Teks publiknya dikumpulkan di `frontend/src/content/landing.ts` agar mudah diganti.
+Situs gerakan kecakapan AI untuk masyarakat Indonesia. Pengunjung dapat mengikuti onboarding singkat sebagai tamu, menerima langkah awal yang sesuai jawaban mereka, lalu masuk **waiting list**. Anggota waiting list dapat bertanya hingga lima kali tentang Semua Bisa AI.
 
 ## Menjalankan lokal
 
-Jika belum ada `.env` di root proyek, salin `.env.example` ke `.env` lalu isi `VITE_CLERK_PUBLISHABLE_KEY`.
+Salin `.env.example` menjadi `.env` di root proyek. Isi `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, dan `OPENROUTER_API_KEY`. Kunci OpenRouter hanya dibaca backend; jangan beri awalan `VITE_`.
 
 ```bash
-cd frontend
-bun install
+cd frontend && bun install
 cd ..
-make dev
+make dev-backend   # terminal pertama
+make dev-frontend  # terminal kedua
 ```
 
-Buka http://localhost:3000. Hentikan server dengan Ctrl+C pada terminal yang menjalankan `make dev`. Pemeriksaan: `cd frontend && bun run build && bun run lint`.
+Buka `/onboarding` untuk alur umum atau `/card?ref=aidityasadhakim` untuk alur QR kartu Aidityas Adhakim. Beranda juga mengarah ke onboarding. Backend membuat tabel onboarding, waiting list, dan tanya jawab saat mulai; migrasi Goose yang setara tersedia di `backend/sql/migrations/002_onboarding.sql`.
 
-## Waiting list dengan Clerk
+## Alur dan data
 
-1. Isi `VITE_CLERK_PUBLISHABLE_KEY` dari Clerk Dashboard di `.env` pada root proyek. File yang sama dipakai oleh `make dev`, `make dev-docker`, dan `make prod-up`.
-2. Di Clerk Dashboard, aktifkan **email** dan **Google** sebagai cara sign in/sign up.
-3. Buka `/join`, masuk dengan Google atau email, lalu pilih **Konfirmasi masuk daftar**.
+- Empat jawaban pilihan disimpan bersama kode referral dan waktu pengisian untuk analitik. Onboarding tidak memerlukan akun.
+- Pendaftaran waiting list memakai akun Clerk dan tersimpan di SQLite. Anggota lama yang sebelumnya hanya tercatat di metadata Clerk perlu menekan tombol konfirmasi sekali lagi.
+- Setelah bergabung, anggota dapat mengajukan maksimal lima pertanyaan. Setiap permintaan yang dikirim ke OpenRouter memakai satu jatah, termasuk bila penyedia gagal menjawab. Backend membatasi panjang pertanyaan dan keluaran model.
+- Model yang dipakai: `deepseek/deepseek-v4.1-flash` melalui OpenRouter. Panduan isi dan nada jawaban ada di `docs/brand-answer-guideline.md`.
 
-Jika menjalankan backend Go, isi `CLERK_SECRET_KEY` di file yang sama. Hanya variabel berawalan `VITE_` yang masuk ke browser; secret key tetap di backend. `VITE_API_URL` dapat dibiarkan kosong agar `/api` memakai origin yang sama. Saat dev, Vite meneruskan `/api` ke backend lokal atau container Docker.
+Untuk melihat minat berdasarkan referral, profesi, dan kota, data tersedia di tabel `onboarding_sessions`. Hubungan dengan anggota yang mendaftar tersedia melalui `waitlist_members.onboarding_id`. Riwayat tanya jawab tersimpan di `visitor_questions`. Belum ada dashboard analitik.
 
-Untuk produksi Docker, isi `DOMAIN_NAME` di `.env` root lalu jalankan `make prod-up`. Untuk akses melalui Tailscale saja, gunakan `DOMAIN_NAME=http://<tailscale-ip>` dan `BIND_ADDRESS=<tailscale-ip>`. Untuk domain publik, gunakan `DOMAIN_NAME=<domain>`, `BIND_ADDRESS=0.0.0.0`, dan `TAILSCALE_IP=<tailscale-ip>` agar alamat privat tetap tersedia. Compose membangun frontend dan Caddy dari `.env` root, sehingga tidak perlu membuat `frontend/.env` atau membangun `frontend/dist` secara terpisah. SQLite disimpan di volume Docker `sqlite_data`.
+## Produksi
 
-Konfirmasi menyimpan `waitlistJoinedAt` di `unsafeMetadata` pengguna Clerk. Ini penanda minat awal yang bisa dilihat pada profil pengguna; belum menjadi sistem undangan, persetujuan, atau kontrol akses. Metadata ini dapat diubah oleh pengguna sendiri, sehingga jangan dipakai sebagai sumber otorisasi. Jika Clerk belum dikonfigurasi, halaman menampilkan petunjuk pengaturan dan tidak mengklaim pendaftaran berhasil.
+Isi variabel yang sama di `.env` root beserta `DOMAIN_NAME`, lalu jalankan `make prod-up`. Kedua berkas Docker Compose meneruskan `OPENROUTER_API_KEY` hanya ke backend. `VITE_API_URL` boleh kosong agar frontend memakai `/api` pada origin yang sama.
 
-## Anotasi UI
+## Pemeriksaan
 
-[Agentation](https://www.agentation.com/install) terpasang untuk mode pengembangan. Saat `bun run dev` aktif, buka halaman di browser desktop, klik toolbar di pojok, tandai elemen, dan salin hasil anotasinya untuk revisi. Toolbar tidak dimuat pada build produksi.
-
-Backend Go/Echo dan konfigurasi Docker dari fondasi proyek tetap tersedia untuk pengembangan berikutnya.
+Frontend: `cd frontend && bun run build && bun run lint`. Backend: `cd backend && go test ./... && go vet ./...`.

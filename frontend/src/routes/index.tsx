@@ -13,8 +13,8 @@ function HomePage() {
         <section className="hero page-width" aria-labelledby="hero-title">
           <h1 id="hero-title">{landing.heroTitle}</h1>
           <p className="hero-body">{landing.heroBody}</p>
-          <Link className="join-link" to="/join">
-            Join the waiting list
+          <Link className="join-link" to="/onboarding">
+            Mulai dari ceritamu
           </Link>
         </section>
 
@@ -57,8 +57,8 @@ function HomePage() {
         <section className="closing section-inner page-width" aria-labelledby="closing-title">
           <h2 id="closing-title">{landing.closingTitle}</h2>
           <p>{landing.closingBody}</p>
-          <Link className="join-link" to="/join">
-            Join the waiting list
+          <Link className="join-link" to="/onboarding">
+            Mulai dari ceritamu
           </Link>
         </section>
       </main>

@@ -5,7 +5,7 @@
 # ====================
 # Stage: Development
 # ====================
-FROM oven/bun:1 AS dev
+FROM oven/bun:1.4.2 AS dev
 
 WORKDIR /app
 
@@ -26,7 +26,7 @@ CMD ["bun", "run", "dev", "--host"]
 # ====================
 # Stage: Builder
 # ====================
-FROM oven/bun:1 AS builder
+FROM oven/bun:1.4.2 AS builder
 
 WORKDIR /app
 

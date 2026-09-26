@@ -78,7 +78,7 @@ status:
 
 ## Install goose CLI locally
 goose-install:
-	go install github.com/pressly/goose/v3/cmd/goose@latest
+	go install github.com/pressly/goose/v3/cmd/goose@v3.28.0
 
 ## Create database directory and file
 db-create:
@@ -113,7 +113,7 @@ db-shell:
 
 ## Install sqlc CLI locally
 sqlc-install:
-	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+	go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1
 
 ## Generate SQLC code (local)
 sqlc:

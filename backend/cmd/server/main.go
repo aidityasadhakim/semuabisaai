@@ -40,10 +40,13 @@ func main() {
 	} else {
 		defer database.Close()
 		log.Printf("Connected to database: %s", cfg.DatabasePath)
+		if err := db.EnsureOnboardingSchema(ctx, database); err != nil {
+			log.Fatalf("Failed to prepare onboarding schema: %v", err)
+		}
 	}
 
 	// Initialize handlers
-	h := handlers.New(database)
+	h := handlers.New(database, cfg.OpenRouterAPIKey)
 
 	// Initialize Echo
 	e := echo.New()

@@ -5,7 +5,7 @@
 # ====================
 # Stage: Development
 # ====================
-FROM golang:1.27.1-alpine AS dev
+FROM golang:1.27.1-alpine3.24 AS dev
 
 # Install development tools
 RUN apk add --no-cache git sqlite
@@ -14,10 +14,10 @@ RUN apk add --no-cache git sqlite
 RUN go install github.com/air-verse/air@v1.67.4
 
 # Install Goose for migrations
-RUN go install github.com/pressly/goose/v3/cmd/goose@v3.27.3
+RUN go install github.com/pressly/goose/v3/cmd/goose@v3.28.0
 
 # Install SQLC for code generation
-RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.30.0
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1
 
 WORKDIR /app
 
@@ -39,7 +39,7 @@ CMD ["air", "-c", ".air.toml"]
 # ====================
 # Stage: Builder
 # ====================
-FROM golang:1.27.1-alpine AS builder
+FROM golang:1.27.1-alpine3.24 AS builder
 
 WORKDIR /app
 
@@ -56,7 +56,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /app/main ./cmd/server
 # ====================
 # Stage: Production
 # ====================
-FROM alpine:3.21 AS prod
+FROM alpine:3.24.2 AS prod
 
 # Install CA certificates for HTTPS and SQLite
 RUN apk --no-cache add ca-certificates sqlite

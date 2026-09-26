@@ -11,10 +11,14 @@ import (
 func Register(e *echo.Echo, h *handlers.Handlers, clerkSecretKey string) {
 	// Public routes
 	e.GET("/api/health", h.Health)
+	e.POST("/api/onboarding", h.SaveOnboarding)
 
 	// Protected routes (require authentication)
 	api := e.Group("/api")
 	api.Use(middleware.ClerkAuth(clerkSecretKey))
+	api.POST("/waitlist", h.JoinWaitlist)
+	api.GET("/waitlist", h.WaitlistStatus)
+	api.POST("/questions", h.AskQuestion)
 
 	// Add your protected routes here
 	// Example:

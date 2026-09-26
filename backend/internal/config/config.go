@@ -13,7 +13,8 @@ type Config struct {
 	BackendHost string
 
 	// Authentication (Clerk)
-	ClerkSecretKey string
+	ClerkSecretKey   string
+	OpenRouterAPIKey string
 }
 
 // Load loads configuration from environment variables
@@ -28,7 +29,8 @@ func Load() *Config {
 		BackendHost: getEnv("BACKEND_HOST", "0.0.0.0"),
 
 		// Authentication
-		ClerkSecretKey: getEnv("CLERK_SECRET_KEY", ""),
+		ClerkSecretKey:   getEnv("CLERK_SECRET_KEY", ""),
+		OpenRouterAPIKey: getEnv("OPENROUTER_API_KEY", ""),
 	}
 }
 
