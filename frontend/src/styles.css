@@ -21,14 +21,11 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; l
 .section-label { margin-bottom: 1rem; color: #66635e; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .join-link { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; padding: .8rem 1.5rem; border: 1px solid #282722; border-radius: 999px; background: #282722; color: #f8f7f3; font-size: .86rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: background-color .18s ease; }
 .join-link:hover { background: #4a4943; }
-.hero { max-width: 800px; padding-block: clamp(4.5rem, 10vh, 8rem) clamp(4.5rem, 8vh, 7rem); }
-.hero h1 { margin-bottom: 1.35rem; font-size: clamp(4.4rem, 9vw, 7.5rem); line-height: 1; }
-.hero-body { max-width: 540px; margin: 0 auto 2rem; color: #55534e; font-size: clamp(1rem, 1.6vw, 1.18rem); line-height: 1.6; }
-.feature-image { position: relative; max-width: 1120px; margin-bottom: 0; }
-.feature-image img { display: block; width: 100%; height: clamp(330px, 49vw, 560px); border-radius: 12px; object-fit: cover; object-position: center; }
-.feature-image figcaption { position: absolute; right: 1.25rem; bottom: 1rem; color: #fff; font-size: .7rem; text-shadow: 0 1px 4px #0008; }
+.hero { max-width: 1120px; padding-block: clamp(4.5rem, 10vh, 8rem) clamp(4.5rem, 8vh, 7rem); }
+.hero h1 { max-width: 1050px; margin: 0 auto 1.35rem; font-size: clamp(3.5rem, 7vw, 6rem); line-height: 1.06; white-space: pre-line; }
+.hero-body { max-width: 750px; margin: 0 auto 2rem; color: #55534e; font-size: clamp(1rem, 1.6vw, 1.18rem); line-height: 1.6; }
 .section-inner { padding-block: clamp(5rem, 9vw, 8rem); }
-.vision { margin-top: 6rem; background: #efede7; }
+.vision { background: #efede7; }
 .vision h2, .goals h2, .formats h2, .closing h2 { max-width: 800px; margin: 0 auto 1.25rem; font-size: clamp(2.8rem, 5vw, 5rem); line-height: 1.08; }
 .vision .section-inner > p:last-child, .closing p { max-width: 650px; margin: 0 auto; color: #55534e; font-size: 1.04rem; line-height: 1.7; }
 .goals h2 { margin-bottom: 3.5rem; }
@@ -68,9 +65,7 @@ code { overflow-wrap: anywhere; font-size: .9em; }
   .page-width { width: min(100% - 2rem, 1120px); }
   .site-header, .join-header { min-height: 80px; }
   .hero { padding-block: 4.5rem 5rem; }
-  .hero h1 { font-size: clamp(4.1rem, 16vw, 6rem); }
-  .feature-image img { height: 360px; }
-  .vision { margin-top: 4rem; }
+  .hero h1 { font-size: clamp(2.8rem, 11vw, 4.5rem); }
   .section-inner { padding-block: 5rem; }
   .goal-grid, .format-grid { grid-template-columns: 1fr; gap: 2rem; }
   .goal { padding-top: 1.5rem; }

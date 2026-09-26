@@ -11,21 +11,12 @@ function HomePage() {
 
       <main>
         <section className="hero page-width" aria-labelledby="hero-title">
-          <p className="section-label">{landing.heroLabel}</p>
           <h1 id="hero-title">{landing.heroTitle}</h1>
           <p className="hero-body">{landing.heroBody}</p>
           <Link className="join-link" to="/join">
             Join the waiting list
           </Link>
         </section>
-
-        <figure className="feature-image page-width">
-          <img
-            src="/images/ai-together-editorial.png"
-            alt="Ilustrasi orang belajar dan mencoba AI bersama di meja kerja"
-          />
-          <figcaption>Visual ilustratif</figcaption>
-        </figure>
 
         <section className="vision" aria-labelledby="vision-title">
           <div className="section-inner page-width">
