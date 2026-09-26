@@ -47,8 +47,8 @@ dev-backend:
 	@echo "Starting backend with hot-reload..."
 	cd backend && air -c .air.toml
 
-## Start frontend only (local, no Docker)
-dev-frontend:
+## Start frontend only (local, no Docker); install locked dependencies first
+dev-frontend: frontend-install
 	@echo "Starting frontend dev server..."
 	cd frontend && bun run dev
 
@@ -153,7 +153,7 @@ check:
 
 ## Install frontend dependencies
 frontend-install:
-	cd frontend && bun install
+	cd frontend && bun install --frozen-lockfile
 
 ## Build frontend for production
 frontend-build:

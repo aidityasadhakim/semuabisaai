@@ -7,10 +7,8 @@ Situs gerakan kecakapan AI untuk masyarakat Indonesia. Pengunjung dapat mengikut
 Salin `.env.example` menjadi `.env` di root proyek. Isi `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, dan `OPENROUTER_API_KEY`. Kunci OpenRouter hanya dibaca backend; jangan beri awalan `VITE_`.
 
 ```bash
-cd frontend && bun install
-cd ..
 make dev-backend   # terminal pertama
-make dev-frontend  # terminal kedua
+make dev          # terminal kedua; memasang dependensi frontend bila perlu
 ```
 
 Buka `/onboarding` untuk alur umum atau `/card?ref=aidityasadhakim` untuk alur QR kartu Aidityas Adhakim. Beranda juga mengarah ke onboarding. Backend membuat tabel onboarding, waiting list, dan tanya jawab saat mulai; migrasi Goose yang setara tersedia di `backend/sql/migrations/002_onboarding.sql`.
