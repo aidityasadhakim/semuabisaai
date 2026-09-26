@@ -30,13 +30,12 @@ endif
 # Local Development
 # ================================
 
-## Start the landing page locally
+## Start frontend and backend together in Docker
 dev:
-	$(MAKE) dev-frontend
+	docker compose up --build --force-recreate --renew-anon-volumes
 
-## Start all services with hot-reload (requires Docker)
-dev-docker:
-	docker compose up --build
+## Alias for the full-stack Docker development environment
+dev-docker: dev
 
 ## Start all services in background
 dev-detach:
