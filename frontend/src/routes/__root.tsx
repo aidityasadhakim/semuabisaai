@@ -6,7 +6,7 @@ import { AuthSetup } from '@/lib/clerk'
 
 function RootComponent() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen">
       {/* Set up auth token getter for API calls */}
       <AuthSetup />
 

@@ -13,10 +13,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	"fastship/backend/internal/config"
-	"fastship/backend/internal/db"
-	"fastship/backend/internal/handlers"
-	"fastship/backend/internal/routes"
+	"semuabisaai/backend/internal/config"
+	"semuabisaai/backend/internal/db"
+	"semuabisaai/backend/internal/handlers"
+	"semuabisaai/backend/internal/routes"
 )
 
 func main() {

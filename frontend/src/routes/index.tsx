@@ -1,333 +1,108 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
-import { useAuth, useUser, SignedIn, SignedOut } from '@clerk/clerk-react'
 
-import { getHealth } from '@/lib/api'
-import { isClerkConfigured } from '@/lib/clerk'
-import { Button } from '@/components/ui/Button'
-
-function HomePage() {
-  const { data: health, isLoading, error } = useQuery({
-    queryKey: ['health'],
-    queryFn: getHealth,
-  })
-
-  return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden">
-      {/* Decorative Elements */}
-      <DecorativeCorner position="top-left" />
-      <DecorativeCorner position="top-right" />
-      <DecorativeCorner position="bottom-left" />
-      <DecorativeCorner position="bottom-right" />
-
-      {/* Scattered Terminal Labels */}
-      <TerminalLabel className="absolute top-8 left-8" prefix="/">
-        POSITION REQUIRED/
-      </TerminalLabel>
-      <TerminalLabel className="absolute top-8 right-8" prefix=">">
-        LOST IN SPACE
-      </TerminalLabel>
-      <TerminalLabel className="absolute bottom-8 left-8" prefix="///">
-        SIGNAL_TEST
-      </TerminalLabel>
-      <TerminalLabel className="absolute bottom-24 left-8" prefix="_!">
-        ACTIVE !_
-      </TerminalLabel>
-      <TerminalLabel className="absolute bottom-8 right-8">
-        COMPLEX PATH
-      </TerminalLabel>
-
-      {/* Main Content */}
-      <div className="container relative z-10 py-24">
-        {/* Hero Section */}
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-4 flex justify-center gap-4">
-            <Star />
-            <Star size="sm" />
-            <Star />
-          </div>
-
-          <h1 className="font-mono text-5xl font-bold uppercase tracking-[0.2em] sm:text-7xl">
-            FASTSHIP
-          </h1>
-
-          <div className="mt-6 flex items-center justify-center gap-4">
-            <div className="h-px w-16 bg-white/30" />
-            <p className="font-mono text-sm uppercase tracking-widest text-white/60">
-              _FULLSTACK BOILERPLATE
-            </p>
-            <div className="h-px w-16 bg-white/30" />
-          </div>
-
-          <p className="mx-auto mt-8 max-w-xl font-mono text-sm leading-relaxed text-white/70">
-            &gt;PRODUCTION_READY FULLSTACK BOILERPLATE FOR RAPID DEVELOPMENT.
-            <br />
-            &gt;GO + REACT + SQLITE + MODERN_TOOLING
-          </p>
-
-          <div className="mt-12 flex items-center justify-center gap-6">
-            <Button>_LAUNCH</Button>
-            <Button variant="outline">/DOCS/</Button>
-          </div>
-        </div>
-
-        {/* System Status Panel */}
-        <div className="mt-24">
-          <div className="mx-auto max-w-md border border-white/20 bg-black p-6">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h2 className="font-mono text-xs uppercase tracking-widest text-white/60">
-                &gt;SYSTEM_STATUS
-              </h2>
-              <span className="font-mono text-xs text-white/40">
-                SECTOR_48
-              </span>
-            </div>
-
-            {isLoading ? (
-              <div className="mt-4 flex items-center gap-2">
-                <div className="h-2 w-2 animate-pulse bg-white/40" />
-                <p className="font-mono text-xs uppercase tracking-wider text-white/50">
-                  SCANNING...
-                </p>
-              </div>
-            ) : error ? (
-              <div className="mt-4">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 bg-white/40" />
-                  <p className="font-mono text-xs uppercase tracking-wider text-white/60">
-                    _! CONNECTION_FAILURE !_
-                  </p>
-                </div>
-                <p className="mt-2 font-mono text-xs text-white/40">
-                  &gt;ENSURE BACKEND RUNNING ON PORT 8080
-                </p>
-              </div>
-            ) : (
-              <div className="mt-4 space-y-3">
-                <StatusRow
-                  label="SERVER"
-                  value={health?.status?.toUpperCase() || 'UNKNOWN'}
-                  active={health?.status === 'ok'}
-                />
-                <StatusRow
-                  label="DATABASE"
-                  value={health?.database?.toUpperCase() || 'UNKNOWN'}
-                  active={health?.database === 'connected'}
-                />
-                <AuthStatusRow />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Features Grid */}
-        <div className="mt-24">
-          <div className="mb-8 flex items-center justify-center gap-4">
-            <div className="h-px w-12 bg-white/20" />
-            <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-white/60">
-              MODULES_INCLUDED
-            </h2>
-            <div className="h-px w-12 bg-white/20" />
-          </div>
-
-          <div className="grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, i) => (
-              <div
-                key={feature.title}
-                className="group bg-black p-6 transition-colors hover:bg-white/5"
-              >
-                <div className="flex items-start justify-between">
-                  <span className="font-mono text-xs text-white/30">
-                    0{i + 1}
-                  </span>
-                  <Star size="sm" className="opacity-30 group-hover:opacity-60" />
-                </div>
-                <h3 className="mt-4 font-mono text-sm font-bold uppercase tracking-wider">
-                  {feature.title}
-                </h3>
-                <p className="mt-2 font-mono text-xs leading-relaxed text-white/50">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom Terminal Info */}
-        <div className="mt-24 flex items-center justify-center gap-8 font-mono text-xs text-white/30">
-          <span>&gt;CODE:91F0A</span>
-          <span>MARK08_N3</span>
-          <span>_S23</span>
-        </div>
-      </div>
-
-      {/* Vertical Line Decoration */}
-      <div className="absolute right-24 top-1/3 hidden h-32 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent lg:block">
-        <div className="absolute -left-1 top-0 h-2 w-2 rounded-full border border-white/40" />
-        <div className="absolute -left-1 bottom-0 h-2 w-2 rounded-full border border-white/40" />
-      </div>
-    </div>
-  )
-}
-
-// Auth Status Row Component
-function AuthStatusRow() {
-  if (!isClerkConfigured()) {
-    return (
-      <StatusRow
-        label="AUTH"
-        value="DISABLED"
-        active={false}
-      />
-    )
-  }
-
-  return (
-    <>
-      <SignedIn>
-        <AuthStatusSignedIn />
-      </SignedIn>
-      <SignedOut>
-        <StatusRow
-          label="AUTH"
-          value="SIGNED_OUT"
-          active={false}
-        />
-      </SignedOut>
-    </>
-  )
-}
-
-function AuthStatusSignedIn() {
-  const { user } = useUser()
-  const { isLoaded } = useAuth()
-
-  if (!isLoaded) {
-    return (
-      <StatusRow
-        label="AUTH"
-        value="LOADING..."
-        active={false}
-      />
-    )
-  }
-
-  return (
-    <StatusRow
-      label="AUTH"
-      value={user?.primaryEmailAddress?.emailAddress?.toUpperCase() || 'SIGNED_IN'}
-      active={true}
-    />
-  )
-}
-
-// Decorative Components
-function Star({
-  size = 'md',
-  className = '',
-}: {
-  size?: 'sm' | 'md' | 'lg'
-  className?: string
-}) {
-  const sizeMap = { sm: 'text-xs', md: 'text-sm', lg: 'text-base' }
-  return (
-    <span className={`${sizeMap[size]} text-white/60 ${className}`}>+</span>
-  )
-}
-
-function TerminalLabel({
-  children,
-  prefix = '',
-  className = '',
-}: {
-  children: React.ReactNode
-  prefix?: string
-  className?: string
-}) {
-  return (
-    <div className={`font-mono text-xs uppercase tracking-wider ${className}`}>
-      {prefix && <span className="text-white/40">{prefix}</span>}
-      <span className="text-white/60">{children}</span>
-    </div>
-  )
-}
-
-function StatusRow({
-  label,
-  value,
-  active,
-}: {
-  label: string
-  value: string
-  active: boolean
-}) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="font-mono text-xs text-white/50">{label}</span>
-      <div className="flex items-center gap-2">
-        <div
-          className={`h-1.5 w-1.5 ${active ? 'bg-green-500' : 'bg-white/30'}`}
-        />
-        <span
-          className={`font-mono text-xs ${active ? 'text-green-500' : 'text-white/40'}`}
-        >
-          {value}
-        </span>
-      </div>
-    </div>
-  )
-}
-
-function DecorativeCorner({ position }: { position: string }) {
-  const positionClasses: Record<string, string> = {
-    'top-left': 'top-4 left-4',
-    'top-right': 'top-4 right-4 rotate-90',
-    'bottom-left': 'bottom-4 left-4 -rotate-90',
-    'bottom-right': 'bottom-4 right-4 rotate-180',
-  }
-
-  return (
-    <div className={`absolute ${positionClasses[position]} text-white/20`}>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M0 0 L12 0 L12 2 L2 2 L2 12 L0 12 Z" fill="currentColor" />
-      </svg>
-    </div>
-  )
-}
-
-const features = [
+const outcomes = [
   {
-    title: 'GO_BACKEND',
+    title: 'Paham kemampuan AI',
     description:
-      '>HIGH_PERFORMANCE API WITH ECHO FRAMEWORK, SQLC FOR TYPE_SAFE QUERIES',
+      'Kenali apa yang bisa dibantu AI, apa batasannya, dan kapan hasilnya perlu diperiksa lagi.',
   },
   {
-    title: 'REACT_FRONTEND',
-    description:
-      '>REACT 19 + TANSTACK ROUTER + TANSTACK QUERY + TAILWIND CSS V4',
+    title: 'Punya alur kerja baru',
+    description: 'Bawa pekerjaan sehari-hari, lalu cari bagian yang bisa dikerjakan bersama AI.',
   },
   {
-    title: 'SQLITE_DATABASE',
-    description:
-      '>SIMPLE, FAST, PORTABLE. ZERO_CONFIG REQUIRED FOR DEVELOPMENT',
-  },
-  {
-    title: 'CLERK_AUTH',
-    description:
-      '>OPTIONAL PLUG_AND_PLAY AUTHENTICATION WITH SOCIAL_LOGINS',
-  },
-  {
-    title: 'HOT_RELOAD',
-    description:
-      '>AIR FOR BACKEND, VITE FOR FRONTEND. INSTANT_FEEDBACK LOOP',
-  },
-  {
-    title: 'DOCKER_READY',
-    description:
-      '>MULTI_STAGE DOCKERFILES FOR DEV AND PRODUCTION DEPLOYMENTS',
+    title: 'Menggunakan AI dengan bijak',
+    description: 'Jaga data, pahami etika penggunaan, dan tetap pegang keputusan sebagai manusia.',
   },
 ]
 
-export const Route = createFileRoute('/')(({
-  component: HomePage,
-}))
+function HomePage() {
+  return (
+    <div className="site-shell">
+      <header className="site-header">
+        <a className="wordmark" href="#beranda" aria-label="Semua Bisa AI, kembali ke awal">
+          semua<span>bisa</span>ai<span className="wordmark-dot">.</span>
+        </a>
+        <nav aria-label="Navigasi utama">
+          <a href="#tentang">Tentang gerakan</a>
+          <a href="#cara-belajar">Cara belajar</a>
+        </nav>
+      </header>
+      <main id="beranda">
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="hero-copy">
+            <p className="eyebrow">Gerakan belajar AI untuk semua orang</p>
+            <h1 id="hero-title">
+              AI bukan cuma untuk <span>orang teknis.</span>
+            </h1>
+            <p className="hero-description">
+              Perkembangan AI itu nyata. Semua Bisa AI mengajak siapa pun mengenal, mencoba, dan
+              menggunakan AI untuk memperkuat kemampuan dalam pekerjaan sehari-hari.
+            </p>
+            <a className="primary-link" href="#tentang">
+              Kenali gerakannya <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div className="hero-art" aria-hidden="true">
+            <div className="art-orbit art-orbit-outer" />
+            <div className="art-orbit art-orbit-inner" />
+            <div className="art-core">
+              bisa<span>!</span>
+            </div>
+            <span className="art-label art-label-top">GURU</span>
+            <span className="art-label art-label-right">AKUNTAN</span>
+            <span className="art-label art-label-bottom">PROGRAMMER</span>
+            <span className="art-label art-label-left">SIAPA SAJA</span>
+          </div>
+        </section>
+        <section className="intro section-wrap" id="tentang" aria-labelledby="intro-title">
+          <p className="section-tag">Kenapa gerakan ini ada?</p>
+          <div>
+            <h2 id="intro-title">Jarak pengetahuan AI perlu kita dekatkan bersama.</h2>
+            <p>
+              Perubahan AI berjalan cepat, sementara banyak orang belum sempat melihat apa yang
+              sudah mungkin dilakukan hari ini. Kami percaya kecakapan AI bisa dipelajari siapa pun,
+              apa pun profesinya. Tidak perlu menjadi ahli untuk mulai memanfaatkannya.
+            </p>
+          </div>
+        </section>
+        <section className="outcomes" id="cara-belajar" aria-labelledby="outcomes-title">
+          <div className="section-wrap">
+            <p className="section-tag">Belajar untuk menghasilkan sesuatu</p>
+            <h2 id="outcomes-title">Pulang dengan cara kerja yang lebih baik.</h2>
+            <p className="outcomes-lead">
+              Melalui seminar offline gratis di berbagai kota dan bootcamp beberapa sesi, setiap
+              peserta diajak mencoba AI pada kebutuhan yang nyata.
+            </p>
+            <div className="outcome-list">
+              {outcomes.map((outcome, index) => (
+                <article className="outcome" key={outcome.title}>
+                  <span className="outcome-number">0{index + 1}</span>
+                  <div>
+                    <h3>{outcome.title}</h3>
+                    <p>{outcome.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section className="closing section-wrap" aria-labelledby="closing-title">
+          <p className="section-tag">Manusia tetap di pusatnya</p>
+          <h2 id="closing-title">Belajar AI untuk memperluas kemungkinan.</h2>
+          <p>
+            Fokus kami adalah kecakapan praktis, bukan pelatihan mendalam membangun model AI,
+            kumpulan prompt instan, atau menggantikan manusia dengan otomasi. Materi yang lebih
+            spesifik untuk tiap profesi akan tumbuh dari kebutuhan pesertanya.
+          </p>
+        </section>
+      </main>
+      <footer className="site-footer">
+        <span>semuabisaai.</span>
+        <span>AI untuk semua. Mulai dari yang nyata.</span>
+      </footer>
+    </div>
+  )
+}
+
+export const Route = createFileRoute('/')({ component: HomePage })

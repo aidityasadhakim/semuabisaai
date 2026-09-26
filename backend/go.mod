@@ -1,4 +1,4 @@
-module fastship/backend
+module semuabisaai/backend
 
 go 1.25
 

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fastship/backend/internal/db"
+	"semuabisaai/backend/internal/db"
 )
 
 // Handlers holds all HTTP handlers and their dependencies

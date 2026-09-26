@@ -1,5 +1,5 @@
 # ====================
-# Fastship Frontend - Multi-stage Dockerfile
+# Semua Bisa AI Frontend - Multi-stage Dockerfile
 # ====================
 
 # ====================

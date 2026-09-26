@@ -1,146 +1,71 @@
 @import 'tailwindcss';
 
-/* ====================
- * Spaceman - Sci-Fi Terminal Theme
- * Brutalist, retro-futuristic space aesthetic
- * ==================== */
-:root {
-  --color-primary: #ffffff;
-  --color-primary-dark: #cccccc;
-  --color-primary-light: #ffffff;
-  --color-background: #000000;
-  --color-foreground: #ffffff;
-  --color-muted: #666666;
-  --color-border: #333333;
-  --color-accent: #ffffff;
-
-  /* Terminal text patterns */
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+:root { font-family: 'Trebuchet MS', Arial, sans-serif; color: #10264c; background: #f6f7f4; font-synthesis: none; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+a { color: inherit; }
+a:focus-visible { outline: 3px solid #ffbc36; outline-offset: 4px; }
+.site-shell { overflow: hidden; }
+.site-header, .site-footer, .section-wrap { width: min(100% - 3rem, 1200px); margin-inline: auto; }
+.site-header { min-height: 92px; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.wordmark { font-size: 1.5rem; font-weight: 900; letter-spacing: -.06em; text-decoration: none; white-space: nowrap; }
+.wordmark span:first-child { color: #2460eb; }
+.wordmark-dot { color: #ffae19; }
+.site-header nav { display: flex; gap: clamp(1rem, 3vw, 2.5rem); font-size: .9rem; font-weight: 700; }
+.site-header nav a { text-decoration: none; }
+.site-header nav a:hover { color: #2460eb; }
+.hero { min-height: 630px; padding: 5rem max(1.5rem, calc((100vw - 1200px) / 2)); background: #e8f0ff; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(360px, .9fr); align-items: center; gap: 3rem; }
+.hero-copy { position: relative; z-index: 1; max-width: 680px; }
+.eyebrow, .section-tag { margin: 0 0 1.5rem; color: #2459d8; font-size: .75rem; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { max-width: 750px; margin-bottom: 1.5rem; font-size: clamp(3.4rem, 6.4vw, 6rem); line-height: .99; letter-spacing: -.065em; font-weight: 900; }
+h1 span { color: #2460eb; }
+.hero-description { max-width: 590px; margin-bottom: 2rem; font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.65; }
+.primary-link { display: inline-flex; align-items: center; gap: 2rem; padding: 1rem 1.25rem; background: #10264c; color: white; text-decoration: none; font-weight: 800; border-radius: .3rem; }
+.primary-link:hover { background: #2460eb; }
+.primary-link span { font-size: 1.3rem; line-height: 1; }
+.hero-art { position: relative; width: min(100%, 490px); aspect-ratio: 1; justify-self: center; }
+.art-orbit { position: absolute; border: 2px solid #2460eb; border-radius: 50%; transform: rotate(-18deg); }
+.art-orbit-outer { inset: 5%; }
+.art-orbit-inner { inset: 19%; border-style: dashed; opacity: .55; }
+.art-core { position: absolute; inset: 31%; display: grid; place-items: center; background: #2460eb; border-radius: 50%; color: white; font-size: clamp(2.7rem, 5vw, 5rem); font-weight: 900; letter-spacing: -.09em; box-shadow: 18px 18px 0 #ffbc36; }
+.art-core span { color: #ffbc36; }
+.art-label { position: absolute; padding: .65rem .85rem; background: #fff; border: 2px solid #10264c; box-shadow: 4px 4px 0 #10264c; font-size: .7rem; font-weight: 900; letter-spacing: .08em; }
+.art-label-top { top: 3%; left: 36%; transform: rotate(-8deg); }
+.art-label-right { top: 39%; right: -3%; transform: rotate(8deg); }
+.art-label-bottom { bottom: 4%; left: 32%; transform: rotate(-5deg); }
+.art-label-left { top: 49%; left: -7%; transform: rotate(7deg); }
+.intro { padding-block: 7rem; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+.intro h2, .outcomes h2, .closing h2 { max-width: 780px; margin-bottom: 1.5rem; font-size: clamp(2.3rem, 4.5vw, 4.25rem); line-height: 1.08; letter-spacing: -.055em; }
+.intro p:not(.section-tag), .closing p:not(.section-tag) { max-width: 690px; font-size: 1.12rem; line-height: 1.75; }
+.outcomes { padding-block: 6.5rem; background: #10264c; color: #fff; }
+.outcomes .section-tag { color: #ffce69; }
+.outcomes-lead { max-width: 620px; margin-bottom: 3rem; color: #e0eafa; font-size: 1.12rem; line-height: 1.7; }
+.outcome-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #7490b7; }
+.outcome { padding: 2rem 2rem 0 0; display: flex; gap: 1.25rem; }
+.outcome + .outcome { border-left: 1px solid #7490b7; padding-left: 2rem; }
+.outcome-number { color: #ffce69; font-size: .8rem; font-weight: 900; }
+.outcome h3 { margin-bottom: .75rem; font-size: 1.3rem; }
+.outcome p { color: #e0eafa; line-height: 1.6; }
+.closing { padding-block: 7rem; }
+.site-footer { min-height: 110px; border-top: 1px solid #b5c2d3; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: .9rem; }
+.site-footer span:first-child { font-size: 1.3rem; font-weight: 900; letter-spacing: -.06em; }
+@media (max-width: 850px) {
+  .hero { grid-template-columns: 1fr; padding-block: 4rem; }
+  .hero-art { width: min(75vw, 400px); }
+  .intro { grid-template-columns: 1fr; }
+  .outcome-list { grid-template-columns: 1fr; }
+  .outcome, .outcome + .outcome { padding: 1.5rem 0; border-left: 0; border-bottom: 1px solid #7490b7; }
 }
-
-/* Dark mode (same as light for this theme) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #000000;
-    --color-foreground: #ffffff;
-    --color-muted: #666666;
-    --color-border: #333333;
-  }
+@media (max-width: 520px) {
+  .site-header { min-height: 78px; align-items: flex-start; padding-block: 1.1rem; flex-direction: column; gap: .65rem; }
+  .site-header nav { font-size: .8rem; }
+  .hero { padding-top: 3rem; gap: 2rem; }
+  h1 { font-size: clamp(3rem, 14vw, 4rem); }
+  .hero-art { width: min(78vw, 310px); }
+  .art-label { font-size: .52rem; padding: .45rem .5rem; }
+  .intro, .outcomes, .closing { padding-block: 4.5rem; }
+  .site-footer { align-items: flex-start; justify-content: center; flex-direction: column; }
 }
-
-/* ====================
- * Base Styles
- * ==================== */
-body {
-  font-family: var(--font-mono);
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  letter-spacing: 0.05em;
-}
-
-/* ====================
- * Utility Classes
- * ==================== */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-/* Focus ring for accessibility */
-.focus-ring {
-  @apply focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-black;
-}
-
-/* ====================
- * Terminal Text Patterns
- * ==================== */
-.terminal-prefix {
-  opacity: 0.6;
-}
-
-.terminal-text {
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-family: var(--font-mono);
-}
-
-/* Decorative crosshair */
-.crosshair {
-  position: relative;
-}
-
-.crosshair::before,
-.crosshair::after {
-  content: '';
-  position: absolute;
-  background: currentColor;
-  opacity: 0.3;
-}
-
-.crosshair::before {
-  width: 1px;
-  height: 20px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.crosshair::after {
-  width: 20px;
-  height: 1px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Star decoration */
-.star-4 {
-  position: relative;
-  display: inline-block;
-}
-
-.star-4::before {
-  content: '+';
-  font-size: 0.8em;
-}
-
-/* Scan line effect */
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100vh);
-  }
-}
-
-.scanline-effect::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent);
-  animation: scanline 8s linear infinite;
-  pointer-events: none;
-  z-index: 1000;
-}
-
-/* Subtle flicker */
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  92% { opacity: 1; }
-  93% { opacity: 0.8; }
-  94% { opacity: 1; }
-  97% { opacity: 0.9; }
-  98% { opacity: 1; }
-}
-
-.flicker {
-  animation: flicker 4s infinite;
-}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

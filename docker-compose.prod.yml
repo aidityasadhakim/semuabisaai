@@ -1,5 +1,5 @@
 # ====================
-# Fastship - Production Docker Compose
+# Semua Bisa AI - Production Docker Compose
 # ====================
 # Usage: make prod-up (or docker compose -f docker-compose.prod.yml up --build -d)
 
@@ -11,10 +11,10 @@ services:
     build:
       context: ./backend
       target: prod
-    container_name: fastship-prod-backend
+    container_name: semuabisaai-prod-backend
     restart: unless-stopped
     environment:
-      DATABASE_PATH: /app/data/fastship.db
+      DATABASE_PATH: /app/data/semuabisaai.db
       BACKEND_PORT: 8080
       BACKEND_HOST: 0.0.0.0
       CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
@@ -31,7 +31,7 @@ services:
   # ====================
   caddy:
     image: caddy:2-alpine
-    container_name: fastship-prod-caddy
+    container_name: semuabisaai-prod-caddy
     restart: unless-stopped
     ports:
       - "80:80"

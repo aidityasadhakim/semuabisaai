@@ -1,13 +1,13 @@
 # ================================
-# Fastship - Makefile
+# Semua Bisa AI - Makefile
 # ================================
 # A production-ready fullstack boilerplate
-# https://github.com/yourusername/fastship
+# https://github.com/yourusername/semuabisaai
 
 # ================================
 # Configuration
 # ================================
-PROJECT_NAME ?= fastship
+PROJECT_NAME ?= semuabisaai
 DB_PATH ?= ./data/$(PROJECT_NAME).db
 MIGRATIONS_DIR ?= backend/sql/migrations
 
@@ -219,7 +219,7 @@ init:
 ## Show this help
 help:
 	@echo ""
-	@echo "Fastship - Available Commands"
+	@echo "Semua Bisa AI - Available Commands"
 	@echo "=============================="
 	@echo ""
 	@echo "Usage: make \033[36m<target>\033[0m"

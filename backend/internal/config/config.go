@@ -5,7 +5,7 @@ import "os"
 // Config holds the application configuration
 type Config struct {
 	// Database
-	DatabasePath string // SQLite file path (e.g., "./data/fastship.db")
+	DatabasePath string // SQLite file path (e.g., "./data/semuabisaai.db")
 	// DatabaseURL string // PostgreSQL/MySQL connection string (uncomment if using)
 
 	// Server
@@ -20,7 +20,7 @@ type Config struct {
 func Load() *Config {
 	return &Config{
 		// Database - SQLite by default
-		DatabasePath: getEnv("DATABASE_PATH", "./data/fastship.db"),
+		DatabasePath: getEnv("DATABASE_PATH", "./data/semuabisaai.db"),
 		// DatabaseURL: getEnv("DATABASE_URL", ""), // Uncomment for PostgreSQL/MySQL
 
 		// Server

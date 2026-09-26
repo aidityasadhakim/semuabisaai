@@ -3,8 +3,8 @@ package routes
 import (
 	"github.com/labstack/echo/v4"
 
-	"fastship/backend/internal/handlers"
-	"fastship/backend/internal/middleware"
+	"semuabisaai/backend/internal/handlers"
+	"semuabisaai/backend/internal/middleware"
 )
 
 // Register registers all routes for the application
