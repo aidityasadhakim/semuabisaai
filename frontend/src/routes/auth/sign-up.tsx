@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SignUp } from '@clerk/clerk-react'
+import { SignUp } from '@clerk/react'
 
 function SignUpPage() {
   return (
@@ -8,7 +8,7 @@ function SignUpPage() {
         routing="path"
         path="/auth/sign-up"
         signInUrl="/auth/sign-in"
-        forceRedirectUrl="/"
+        forceRedirectUrl="/join"
       />
     </div>
   )

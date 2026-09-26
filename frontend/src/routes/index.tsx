@@ -1,105 +1,102 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 
-const outcomes = [
-  {
-    title: 'Paham kemampuan AI',
-    description:
-      'Kenali apa yang bisa dibantu AI, apa batasannya, dan kapan hasilnya perlu diperiksa lagi.',
-  },
-  {
-    title: 'Punya alur kerja baru',
-    description: 'Bawa pekerjaan sehari-hari, lalu cari bagian yang bisa dikerjakan bersama AI.',
-  },
-  {
-    title: 'Menggunakan AI dengan bijak',
-    description: 'Jaga data, pahami etika penggunaan, dan tetap pegang keputusan sebagai manusia.',
-  },
-]
+import { landing } from '@/content/landing'
+
+function JoinLink({ className = '', children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <Link className={`join-link ${className}`} to="/join">
+      {children}
+      <span aria-hidden="true">↗</span>
+    </Link>
+  )
+}
 
 function HomePage() {
   return (
-    <div className="site-shell">
-      <header className="site-header">
-        <a className="wordmark" href="#beranda" aria-label="Semua Bisa AI, kembali ke awal">
-          semua<span>bisa</span>ai<span className="wordmark-dot">.</span>
+    <div className="site-shell" id="top">
+      <div className="announcement">{landing.announcement}</div>
+      <header className="site-header page-width">
+        <a className="wordmark" href="#top" aria-label="Semua Bisa AI, kembali ke atas">
+          semua bisa<span>ai.</span>
         </a>
         <nav aria-label="Navigasi utama">
-          <a href="#tentang">Tentang gerakan</a>
+          <a href="#tentang">Tentang</a>
           <a href="#cara-belajar">Cara belajar</a>
         </nav>
+        <JoinLink className="header-cta">Join the waiting list</JoinLink>
       </header>
-      <main id="beranda">
-        <section className="hero" aria-labelledby="hero-title">
+
+      <main>
+        <section className="hero page-width" aria-labelledby="hero-title">
           <div className="hero-copy">
-            <p className="eyebrow">Gerakan belajar AI untuk semua orang</p>
-            <h1 id="hero-title">
-              AI bukan cuma untuk <span>orang teknis.</span>
-            </h1>
-            <p className="hero-description">
-              Perkembangan AI itu nyata. Semua Bisa AI mengajak siapa pun mengenal, mencoba, dan
-              menggunakan AI untuk memperkuat kemampuan dalam pekerjaan sehari-hari.
-            </p>
-            <a className="primary-link" href="#tentang">
-              Kenali gerakannya <span aria-hidden="true">↗</span>
-            </a>
+            <p className="eyebrow">{landing.heroEyebrow}</p>
+            <h1 id="hero-title">{landing.heroTitle}</h1>
+            <p className="hero-body">{landing.heroBody}</p>
+            <JoinLink>Join the waiting list</JoinLink>
+            <p className="hero-note">{landing.heroNote}</p>
           </div>
-          <div className="hero-art" aria-hidden="true">
-            <div className="art-orbit art-orbit-outer" />
-            <div className="art-orbit art-orbit-inner" />
-            <div className="art-core">
-              bisa<span>!</span>
+          <div
+            className="hero-media"
+            aria-label="Area visual utama untuk foto kegiatan Semua Bisa AI"
+          >
+            <div className="media-shape media-shape-one" />
+            <div className="media-shape media-shape-two" />
+            <div className="media-disc">
+              semua
+              <br />
+              bisa<span>ai.</span>
             </div>
-            <span className="art-label art-label-top">GURU</span>
-            <span className="art-label art-label-right">AKUNTAN</span>
-            <span className="art-label art-label-bottom">PROGRAMMER</span>
-            <span className="art-label art-label-left">SIAPA SAJA</span>
+            <span className="media-caption">RUANG UNTUK FOTO KEGIATAN</span>
           </div>
         </section>
-        <section className="intro section-wrap" id="tentang" aria-labelledby="intro-title">
-          <p className="section-tag">Kenapa gerakan ini ada?</p>
-          <div>
-            <h2 id="intro-title">Jarak pengetahuan AI perlu kita dekatkan bersama.</h2>
-            <p>
-              Perubahan AI berjalan cepat, sementara banyak orang belum sempat melihat apa yang
-              sudah mungkin dilakukan hari ini. Kami percaya kecakapan AI bisa dipelajari siapa pun,
-              apa pun profesinya. Tidak perlu menjadi ahli untuk mulai memanfaatkannya.
-            </p>
-          </div>
-        </section>
-        <section className="outcomes" id="cara-belajar" aria-labelledby="outcomes-title">
-          <div className="section-wrap">
-            <p className="section-tag">Belajar untuk menghasilkan sesuatu</p>
-            <h2 id="outcomes-title">Pulang dengan cara kerja yang lebih baik.</h2>
-            <p className="outcomes-lead">
-              Melalui seminar offline gratis di berbagai kota dan bootcamp beberapa sesi, setiap
-              peserta diajak mencoba AI pada kebutuhan yang nyata.
-            </p>
-            <div className="outcome-list">
-              {outcomes.map((outcome, index) => (
-                <article className="outcome" key={outcome.title}>
-                  <span className="outcome-number">0{index + 1}</span>
-                  <div>
-                    <h3>{outcome.title}</h3>
-                    <p>{outcome.description}</p>
-                  </div>
-                </article>
-              ))}
+
+        <section className="intro" id="tentang" aria-labelledby="intro-title">
+          <div className="page-width intro-grid">
+            <p className="eyebrow">{landing.introEyebrow}</p>
+            <div>
+              <h2 id="intro-title">{landing.introTitle}</h2>
+              <p>{landing.introBody}</p>
             </div>
           </div>
         </section>
-        <section className="closing section-wrap" aria-labelledby="closing-title">
-          <p className="section-tag">Manusia tetap di pusatnya</p>
-          <h2 id="closing-title">Belajar AI untuk memperluas kemungkinan.</h2>
-          <p>
-            Fokus kami adalah kecakapan praktis, bukan pelatihan mendalam membangun model AI,
-            kumpulan prompt instan, atau menggantikan manusia dengan otomasi. Materi yang lebih
-            spesifik untuk tiap profesi akan tumbuh dari kebutuhan pesertanya.
-          </p>
+
+        <section className="formats page-width" id="cara-belajar" aria-labelledby="formats-title">
+          <div className="section-heading">
+            <p className="eyebrow">{landing.formatEyebrow}</p>
+            <h2 id="formats-title">{landing.formatTitle}</h2>
+          </div>
+          <div className="format-grid">
+            {landing.formats.map((item) => (
+              <article className={`format-card ${item.className}`} key={item.title}>
+                <span className="format-label">{item.label}</span>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </div>
+                <span className="format-arrow" aria-hidden="true">
+                  ↗
+                </span>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="closing" aria-labelledby="closing-title">
+          <div className="page-width closing-inner">
+            <div>
+              <p className="eyebrow">{landing.closingEyebrow}</p>
+              <h2 id="closing-title">{landing.closingTitle}</h2>
+              <p>{landing.closingBody}</p>
+            </div>
+            <JoinLink className="join-link--light">Join the waiting list</JoinLink>
+          </div>
         </section>
       </main>
-      <footer className="site-footer">
-        <span>semuabisaai.</span>
-        <span>AI untuk semua. Mulai dari yang nyata.</span>
+      <footer className="site-footer page-width">
+        <span className="wordmark">
+          semua bisa<span>ai.</span>
+        </span>
+        <span>Gerakan belajar AI untuk semua orang.</span>
       </footer>
     </div>
   )

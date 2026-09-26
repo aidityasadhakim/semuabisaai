@@ -3,7 +3,7 @@
  * This file provides helpers for working with Clerk authentication
  */
 
-import { useAuth } from '@clerk/clerk-react'
+import { useAuth } from '@clerk/react'
 import { useEffect } from 'react'
 import { setAuthTokenGetter } from './api'
 

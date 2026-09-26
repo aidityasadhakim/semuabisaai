@@ -1,12 +1,8 @@
 # Semua Bisa AI
 
-Semua Bisa AI adalah gerakan untuk membantu masyarakat Indonesia membangun kecakapan AI. Fokusnya adalah memahami kemampuan dan batas AI, memakai AI dalam alur kerja sehari-hari, dan menggunakannya secara aman serta etis.
+Landing page awal untuk gerakan belajar AI bagi masyarakat Indonesia. Struktur halaman dan teksnya ada di `frontend/src/routes/index.tsx` dan `frontend/src/content/landing.ts`; isi `landing.ts` untuk mengganti copy. Area visual utama masih berupa tempat untuk foto kegiatan.
 
-Tahap awal repositori ini berisi halaman pengantar gerakan. Rencana kegiatan meliputi seminar offline gratis di berbagai kota dan bootcamp beberapa sesi dengan hasil nyata bagi peserta. Materi khusus profesi, jadwal, dan pendaftaran belum tersedia.
-
-## Menjalankan aplikasi
-
-Frontend memakai React, TypeScript, Vite, dan Bun. Backend Go/Echo dari fondasi awal tetap tersedia untuk pengembangan berikutnya; halaman pengantar saat ini tidak memerlukan backend.
+## Menjalankan lokal
 
 ```bash
 cd frontend
@@ -14,6 +10,18 @@ bun install
 bun run dev
 ```
 
-Buka http://localhost:3000. Untuk memeriksa build: `bun run build`.
+Buka http://localhost:3000. Pemeriksaan: `bun run build` dan `bun run lint`.
 
-Konfigurasi backend dan Docker tersedia di `.env.example`, `Makefile`, dan berkas Compose. Autentikasi Clerk masih opsional dan belum dipakai oleh halaman pengantar.
+## Waiting list dengan Clerk
+
+1. Buat aplikasi Clerk dan isi `VITE_CLERK_PUBLISHABLE_KEY` di `frontend/.env` (lihat `frontend/.env.example`).
+2. Di Clerk Dashboard, aktifkan **email** dan **Google** sebagai cara sign in/sign up.
+3. Buka `/join`, masuk dengan Google atau email, lalu pilih **Konfirmasi masuk daftar**.
+
+Konfirmasi menyimpan `waitlistJoinedAt` di `unsafeMetadata` pengguna Clerk. Ini penanda minat awal yang bisa dilihat pada profil pengguna; belum menjadi sistem undangan, persetujuan, atau kontrol akses. Metadata ini dapat diubah oleh pengguna sendiri, sehingga jangan dipakai sebagai sumber otorisasi. Jika Clerk belum dikonfigurasi, halaman menampilkan petunjuk pengaturan dan tidak mengklaim pendaftaran berhasil.
+
+## Anotasi UI
+
+[Agentation](https://www.agentation.com/install) terpasang untuk mode pengembangan. Saat `bun run dev` aktif, buka halaman di browser desktop, klik toolbar di pojok, tandai elemen, dan salin hasil anotasinya untuk revisi. Toolbar tidak dimuat pada build produksi.
+
+Backend Go/Echo dan konfigurasi Docker dari fondasi proyek tetap tersedia untuk pengembangan berikutnya.
