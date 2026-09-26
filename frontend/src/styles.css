@@ -3,7 +3,7 @@
 :root {
   font-family: 'Avenir Next', Avenir, 'Segoe UI', sans-serif;
   color: #282722;
-  background: #f7f6f2;
+  background: #f8f7f3;
   font-synthesis: none;
 }
 * { box-sizing: border-box; }
@@ -12,51 +12,71 @@ body { margin: 0; }
 a { color: inherit; }
 button { font: inherit; }
 a:focus-visible, button:focus-visible { outline: 2px solid #282722; outline-offset: 4px; }
-h1, h2, h3, p { margin-top: 0; }
-.page-width { width: min(100% - 2.5rem, 1080px); margin-inline: auto; }
-.site-shell, .join-page { min-height: 100vh; text-align: center; }
-.site-header, .join-header { min-height: 110px; display: flex; align-items: center; justify-content: center; }
-.wordmark { font-family: Georgia, 'Times New Roman', serif; font-size: 1.25rem; font-weight: 700; letter-spacing: -.055em; text-decoration: none; }
+h1, h2, h3, p, figure { margin-top: 0; }
 h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.05em; }
-.hero { min-height: min(760px, calc(100svh - 110px)); display: grid; place-items: center; padding-block: 5rem 10rem; }
-.hero-content { max-width: 720px; display: flex; flex-direction: column; align-items: center; }
-.hero h1 { margin-bottom: 1.35rem; font-size: clamp(4.8rem, 10vw, 8.5rem); line-height: .98; }
-.hero p { max-width: 470px; margin-bottom: 2rem; color: #5c5a54; font-size: clamp(1rem, 1.5vw, 1.15rem); line-height: 1.6; }
-.join-link { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; padding: .8rem 1.5rem; border: 1px solid #282722; border-radius: 999px; background: #282722; color: #f7f6f2; font-size: .86rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: background-color .18s ease; }
+.page-width { width: min(100% - 2.5rem, 1120px); margin-inline: auto; }
+.site-shell, .join-page { min-height: 100vh; text-align: center; }
+.site-header, .join-header { min-height: 94px; display: flex; align-items: center; justify-content: center; }
+.wordmark { font-family: Georgia, 'Times New Roman', serif; font-size: 1.25rem; font-weight: 700; letter-spacing: -.055em; text-decoration: none; }
+.section-label { margin-bottom: 1rem; color: #66635e; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.join-link { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; padding: .8rem 1.5rem; border: 1px solid #282722; border-radius: 999px; background: #282722; color: #f8f7f3; font-size: .86rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: background-color .18s ease; }
 .join-link:hover { background: #4a4943; }
-.formats { padding-block: 6rem 10rem; border-top: 1px solid #d9d7d0; }
-.formats h2 { margin-bottom: 3rem; font-size: clamp(2.9rem, 5vw, 4.8rem); line-height: 1.1; }
-.format-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; max-width: 660px; margin-inline: auto; }
-.format-item h3 { margin-bottom: .55rem; font-size: 1.65rem; }
-.format-item p { margin-bottom: 0; color: #5c5a54; font-size: .95rem; line-height: 1.55; }
-.site-footer { min-height: 110px; display: grid; place-items: center; border-top: 1px solid #d9d7d0; color: #5c5a54; font-size: .75rem; }
+.hero { max-width: 800px; padding-block: clamp(4.5rem, 10vh, 8rem) clamp(4.5rem, 8vh, 7rem); }
+.hero h1 { margin-bottom: 1.35rem; font-size: clamp(4.4rem, 9vw, 7.5rem); line-height: 1; }
+.hero-body { max-width: 540px; margin: 0 auto 2rem; color: #55534e; font-size: clamp(1rem, 1.6vw, 1.18rem); line-height: 1.6; }
+.feature-image { position: relative; max-width: 1120px; margin-bottom: 0; }
+.feature-image img { display: block; width: 100%; height: clamp(330px, 49vw, 560px); border-radius: 12px; object-fit: cover; object-position: center; }
+.feature-image figcaption { position: absolute; right: 1.25rem; bottom: 1rem; color: #fff; font-size: .7rem; text-shadow: 0 1px 4px #0008; }
+.section-inner { padding-block: clamp(5rem, 9vw, 8rem); }
+.vision { margin-top: 6rem; background: #efede7; }
+.vision h2, .goals h2, .formats h2, .closing h2 { max-width: 800px; margin: 0 auto 1.25rem; font-size: clamp(2.8rem, 5vw, 5rem); line-height: 1.08; }
+.vision .section-inner > p:last-child, .closing p { max-width: 650px; margin: 0 auto; color: #55534e; font-size: 1.04rem; line-height: 1.7; }
+.goals h2 { margin-bottom: 3.5rem; }
+.goal-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; max-width: 1000px; margin-inline: auto; }
+.goal { padding: 2rem .75rem 0; border-top: 1px solid #c8c5bd; }
+.goal h3 { margin-bottom: .7rem; font-size: clamp(1.8rem, 2.5vw, 2.5rem); }
+.goal p { max-width: 240px; margin-inline: auto; color: #55534e; font-size: .94rem; line-height: 1.55; }
+.formats { background: #e8e3da; }
+.formats h2 { margin-bottom: 3rem; }
+.format-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 860px; margin-inline: auto; }
+.format-card { min-height: 235px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; border-radius: 10px; background: #f8f7f3; }
+.format-card h3 { margin-bottom: .8rem; font-size: clamp(2rem, 3vw, 3rem); }
+.format-card p { margin-bottom: 0; color: #55534e; font-size: .95rem; line-height: 1.55; }
+.closing p { margin-bottom: 2rem; }
+.site-footer { min-height: 100px; display: grid; place-items: center; border-top: 1px solid #d9d7d0; color: #66635e; font-size: .75rem; }
 .join-header { min-height: 100px; }
 .join-main { min-height: calc(100svh - 100px); display: flex; flex-direction: column; align-items: center; padding-block: clamp(4rem, 9vh, 8rem) 8rem; }
 .join-intro { max-width: 560px; }
-.join-intro .eyebrow { margin-bottom: 1.5rem; color: #77746d; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.join-intro .eyebrow { margin-bottom: 1.5rem; color: #66635e; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .join-intro h1 { margin-bottom: 1rem; font-size: clamp(4rem, 8vw, 7rem); line-height: 1; }
-.join-intro > p:last-child { margin-bottom: 3.5rem; color: #5c5a54; line-height: 1.6; }
+.join-intro > p:last-child { margin-bottom: 3.5rem; color: #55534e; line-height: 1.6; }
 .join-card { width: min(100%, 440px); }
 .clerk-panel, .join-account { width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
 .clerk-panel * { text-align: center; }
 .join-account h2 { max-width: 400px; margin-bottom: 1rem; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; }
 .join-account p { max-width: 370px; margin-bottom: 1.5rem; line-height: 1.6; }
-.join-account-label { color: #77746d; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.join-account-label { color: #66635e; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .join-button:disabled { cursor: wait; opacity: .55; }
 .join-button span { display: none; }
 .join-check { width: 46px; height: 46px; display: grid; place-items: center; margin-bottom: 2rem; border: 1px solid #282722; border-radius: 50%; font-size: 1.2rem; }
 .join-error { color: #913e30; font-size: .9rem; }
-.join-status { color: #5c5a54; }
-.back-link { margin-top: 4rem; color: #5c5a54; font-size: .8rem; text-decoration: none; }
+.join-status { color: #55534e; }
+.back-link { margin-top: 4rem; color: #55534e; font-size: .8rem; text-decoration: none; }
 .back-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 code { overflow-wrap: anywhere; font-size: .9em; }
 @media (max-width: 650px) {
-  .site-header, .join-header { min-height: 85px; }
-  .hero { min-height: calc(85svh - 85px); padding-block: 4rem 7rem; }
-  .hero h1 { font-size: clamp(4.2rem, 17vw, 6rem); }
-  .formats { padding-block: 5rem 7rem; }
-  .format-list { grid-template-columns: 1fr; gap: 2.5rem; }
-  .join-main { min-height: calc(100svh - 85px); padding-top: 4rem; }
+  .page-width { width: min(100% - 2rem, 1120px); }
+  .site-header, .join-header { min-height: 80px; }
+  .hero { padding-block: 4.5rem 5rem; }
+  .hero h1 { font-size: clamp(4.1rem, 16vw, 6rem); }
+  .feature-image img { height: 360px; }
+  .vision { margin-top: 4rem; }
+  .section-inner { padding-block: 5rem; }
+  .goal-grid, .format-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .goal { padding-top: 1.5rem; }
+  .formats h2 { margin-bottom: 2rem; }
+  .format-card { min-height: 190px; }
+  .join-main { min-height: calc(100svh - 80px); padding-top: 4rem; }
   .join-intro > p:last-child { margin-bottom: 2.5rem; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .join-link { transition: none; } }

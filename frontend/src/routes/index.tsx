@@ -11,25 +11,64 @@ function HomePage() {
 
       <main>
         <section className="hero page-width" aria-labelledby="hero-title">
-          <div className="hero-content">
-            <h1 id="hero-title">{landing.heroTitle}</h1>
-            <p>{landing.heroBody}</p>
-            <Link className="join-link" to="/join">
-              Join the waiting list
-            </Link>
+          <p className="section-label">{landing.heroLabel}</p>
+          <h1 id="hero-title">{landing.heroTitle}</h1>
+          <p className="hero-body">{landing.heroBody}</p>
+          <Link className="join-link" to="/join">
+            Join the waiting list
+          </Link>
+        </section>
+
+        <figure className="feature-image page-width">
+          <img
+            src="/images/ai-together-editorial.png"
+            alt="Ilustrasi orang belajar dan mencoba AI bersama di meja kerja"
+          />
+          <figcaption>Visual ilustratif</figcaption>
+        </figure>
+
+        <section className="vision" aria-labelledby="vision-title">
+          <div className="section-inner page-width">
+            <p className="section-label">{landing.visionLabel}</p>
+            <h2 id="vision-title">{landing.visionTitle}</h2>
+            <p>{landing.visionBody}</p>
           </div>
         </section>
 
-        <section className="formats page-width" aria-labelledby="formats-title">
-          <h2 id="formats-title">{landing.formatsTitle}</h2>
-          <div className="format-list">
-            {landing.formats.map((item) => (
-              <div className="format-item" key={item.title}>
-                <h3>{item.title}</h3>
-                <p>{item.detail}</p>
-              </div>
+        <section className="goals section-inner page-width" aria-labelledby="goals-title">
+          <p className="section-label">{landing.goalsLabel}</p>
+          <h2 id="goals-title">{landing.goalsTitle}</h2>
+          <div className="goal-grid">
+            {landing.goals.map((goal) => (
+              <article className="goal" key={goal.title}>
+                <h3>{goal.title}</h3>
+                <p>{goal.detail}</p>
+              </article>
             ))}
           </div>
+        </section>
+
+        <section className="formats" aria-labelledby="formats-title">
+          <div className="section-inner page-width">
+            <p className="section-label">{landing.formatsLabel}</p>
+            <h2 id="formats-title">{landing.formatsTitle}</h2>
+            <div className="format-grid">
+              {landing.formats.map((item) => (
+                <article className="format-card" key={item.title}>
+                  <h3>{item.title}</h3>
+                  <p>{item.detail}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="closing section-inner page-width" aria-labelledby="closing-title">
+          <h2 id="closing-title">{landing.closingTitle}</h2>
+          <p>{landing.closingBody}</p>
+          <Link className="join-link" to="/join">
+            Join the waiting list
+          </Link>
         </section>
       </main>
 

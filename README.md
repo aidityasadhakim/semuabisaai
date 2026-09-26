@@ -1,6 +1,6 @@
 # Semua Bisa AI
 
-Landing page awal untuk gerakan belajar AI bagi masyarakat Indonesia. Struktur halaman ada di `frontend/src/routes/index.tsx`. Teks publiknya dikumpulkan di `frontend/src/content/landing.ts` agar mudah diganti.
+Landing page awal untuk gerakan belajar AI bagi masyarakat Indonesia. Struktur halaman ada di `frontend/src/routes/index.tsx`. Teks publiknya dikumpulkan di `frontend/src/content/landing.ts` agar mudah diganti. Visual utama bersifat ilustratif dan dapat diganti dengan foto kegiatan saat tersedia.
 
 ## Menjalankan lokal
 
