@@ -1,6 +1,6 @@
 # Semua Bisa AI
 
-Landing page awal untuk gerakan belajar AI bagi masyarakat Indonesia. Struktur halaman ada di `frontend/src/routes/index.tsx`. Teks publiknya dikumpulkan di `frontend/src/content/landing.ts` agar mudah diganti. Visual utama bersifat ilustratif dan dapat diganti dengan foto kegiatan saat tersedia.
+Landing page awal untuk gerakan belajar AI bagi masyarakat Indonesia. Struktur halaman ada di `frontend/src/routes/index.tsx`. Teks publiknya dikumpulkan di `frontend/src/content/landing.ts` agar mudah diganti.
 
 ## Menjalankan lokal
 
@@ -15,9 +15,11 @@ Buka http://localhost:3000. Hentikan server dengan Ctrl+C pada terminal yang men
 
 ## Waiting list dengan Clerk
 
-1. Buat aplikasi Clerk dan isi `VITE_CLERK_PUBLISHABLE_KEY` di `frontend/.env` (lihat `frontend/.env.example`).
+1. Salin `frontend/.env.example` ke `frontend/.env`, lalu isi `VITE_CLERK_PUBLISHABLE_KEY` dari Clerk Dashboard. Kunci ini dipakai saat menjalankan `make dev`.
 2. Di Clerk Dashboard, aktifkan **email** dan **Google** sebagai cara sign in/sign up.
 3. Buka `/join`, masuk dengan Google atau email, lalu pilih **Konfirmasi masuk daftar**.
+
+Jika nanti menjalankan backend Go, salin `.env.example` di root ke `.env` dan isi `CLERK_SECRET_KEY` di sana. Jangan taruh secret key di `frontend/.env`.
 
 Konfirmasi menyimpan `waitlistJoinedAt` di `unsafeMetadata` pengguna Clerk. Ini penanda minat awal yang bisa dilihat pada profil pengguna; belum menjadi sistem undangan, persetujuan, atau kontrol akses. Metadata ini dapat diubah oleh pengguna sendiri, sehingga jangan dipakai sebagai sumber otorisasi. Jika Clerk belum dikonfigurasi, halaman menampilkan petunjuk pengaturan dan tidak mengklaim pendaftaran berhasil.
 
