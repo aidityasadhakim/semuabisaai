@@ -203,7 +203,6 @@ clean-db:
 init:
 	@echo "Initializing $(PROJECT_NAME)..."
 	@if [ ! -f .env ]; then cp .env.example .env && echo "Created .env from .env.example"; fi
-	@if [ ! -f frontend/.env ]; then cp frontend/.env.example frontend/.env && echo "Created frontend/.env"; fi
 	@mkdir -p data
 	@echo "Installing frontend dependencies..."
 	@cd frontend && bun install
@@ -213,8 +212,8 @@ init:
 	@echo "Setup complete! Next steps:"
 	@echo "  1. Edit .env with your configuration"
 	@echo "  2. Run 'make db-migrate' to run migrations"
-	@echo "  3. Run 'make dev-backend' and 'make dev-frontend' in separate terminals"
-	@echo "     OR run 'make dev' to use Docker"
+	@echo "  3. Run 'make dev' for the landing page"
+	@echo "     OR run 'make dev-docker' for frontend and backend in Docker"
 
 # ================================
 # Help

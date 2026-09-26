@@ -17,7 +17,7 @@ services:
       DATABASE_PATH: /app/data/semuabisaai.db
       BACKEND_PORT: 8080
       BACKEND_HOST: 0.0.0.0
-      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-}
     volumes:
       - sqlite_data:/app/data
     logging:
@@ -30,15 +30,21 @@ services:
   # Caddy (Reverse Proxy + Auto SSL)
   # ====================
   caddy:
-    image: caddy:2-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY:-}
+        VITE_API_URL: ${VITE_API_URL:-}
     container_name: semuabisaai-prod-caddy
     restart: unless-stopped
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME:?Set DOMAIN_NAME in the root .env}
+      SSL_EMAIL: ${SSL_EMAIL:?Set SSL_EMAIL in the root .env}
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./frontend/dist:/srv:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

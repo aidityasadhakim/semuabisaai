@@ -1,7 +1,7 @@
 # ====================
 # Semua Bisa AI - Development Docker Compose
 # ====================
-# Usage: make dev (or docker compose up --build)
+# Usage: make dev-docker (or docker compose up --build)
 
 services:
   # ====================
@@ -35,8 +35,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+      VITE_API_URL: ${VITE_API_URL:-}
       VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY:-}
+      API_PROXY_TARGET: http://backend:8080
     volumes:
       - ./frontend:/app
       - /app/node_modules

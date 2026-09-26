@@ -104,7 +104,7 @@ function JoinPage() {
             <div className="join-account">
               <h2>Pendaftaran belum aktif.</h2>
               <p>
-                Tambahkan key Clerk di <code>frontend/.env</code>.
+                Tambahkan key Clerk di <code>.env</code> pada root proyek.
               </p>
             </div>
           )}
