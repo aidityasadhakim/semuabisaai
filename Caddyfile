@@ -1,11 +1,6 @@
 # Caddyfile for production deployment
 # Usage: docker compose -f docker-compose.prod.yml up
 
-{
-    # Email for Let's Encrypt notifications
-    email {$SSL_EMAIL}
-}
-
 {$DOMAIN_NAME} {
     # Reverse proxy to backend API
     handle /api/* {

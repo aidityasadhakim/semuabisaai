@@ -40,10 +40,9 @@ services:
     restart: unless-stopped
     environment:
       DOMAIN_NAME: ${DOMAIN_NAME:?Set DOMAIN_NAME in the root .env}
-      SSL_EMAIL: ${SSL_EMAIL:?Set SSL_EMAIL in the root .env}
     ports:
-      - "80:80"
-      - "443:443"
+      - "${BIND_ADDRESS:-0.0.0.0}:80:80"
+      - "${BIND_ADDRESS:-0.0.0.0}:443:443"
     volumes:
       - caddy_data:/data
       - caddy_config:/config
