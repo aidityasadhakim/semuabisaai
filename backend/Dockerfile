@@ -5,13 +5,13 @@
 # ====================
 # Stage: Development
 # ====================
-FROM golang:1.25-alpine AS dev
+FROM golang:1.27.1-alpine AS dev
 
 # Install development tools
 RUN apk add --no-cache git sqlite
 
 # Install Air for hot-reload
-RUN go install github.com/air-verse/air@v1.66.0
+RUN go install github.com/air-verse/air@v1.67.4
 
 # Install Goose for migrations
 RUN go install github.com/pressly/goose/v3/cmd/goose@v3.27.3
@@ -39,7 +39,7 @@ CMD ["air", "-c", ".air.toml"]
 # ====================
 # Stage: Builder
 # ====================
-FROM golang:1.25-alpine AS builder
+FROM golang:1.27.1-alpine AS builder
 
 WORKDIR /app
 
