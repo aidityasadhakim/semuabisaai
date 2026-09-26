@@ -42,11 +42,10 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; l
 .closing p { margin-bottom: 2rem; }
 .site-footer { min-height: 100px; display: grid; place-items: center; border-top: 1px solid #d9d7d0; color: #66635e; font-size: .75rem; }
 .join-header { min-height: 100px; }
-.join-main { min-height: calc(100svh - 100px); display: flex; flex-direction: column; align-items: center; padding-block: clamp(4rem, 9vh, 8rem) 8rem; }
-.join-intro { max-width: 560px; }
-.join-intro .eyebrow { margin-bottom: 1.5rem; color: #66635e; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-.join-intro h1 { margin-bottom: 1rem; font-size: clamp(4rem, 8vw, 7rem); line-height: 1; }
-.join-intro > p:last-child { margin-bottom: 3.5rem; color: #55534e; line-height: 1.6; }
+.join-main { min-height: calc(100svh - 100px); display: flex; flex-direction: column; align-items: center; padding-block: clamp(2rem, 4vh, 3rem) 5rem; }
+.join-intro { max-width: 960px; }
+.join-intro h1 { margin-bottom: 1rem; font-size: clamp(3rem, 4.5vw, 4.5rem); line-height: 1.08; letter-spacing: -.035em; text-wrap: balance; }
+.join-intro > p:last-child { margin-bottom: 2.5rem; color: #55534e; line-height: 1.6; }
 .join-card { width: min(100%, 440px); }
 .clerk-panel, .join-account { width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
 .clerk-panel * { text-align: center; }
@@ -71,7 +70,6 @@ code { overflow-wrap: anywhere; font-size: .9em; }
   .goal { padding-top: 1.5rem; }
   .formats h2 { margin-bottom: 2rem; }
   .format-card { min-height: 190px; }
-  .join-main { min-height: calc(100svh - 80px); padding-top: 4rem; }
-  .join-intro > p:last-child { margin-bottom: 2.5rem; }
+  .join-main { min-height: calc(100svh - 80px); padding-top: 2rem; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .join-link { transition: none; } }

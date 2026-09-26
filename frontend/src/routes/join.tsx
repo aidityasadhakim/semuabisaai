@@ -93,8 +93,7 @@ function JoinPage() {
       </header>
       <main className="join-main page-width">
         <div className="join-intro">
-          <p className="eyebrow">Waiting list</p>
-          <h1>Bergabung.</h1>
+          <h1>Satu langkah lagi. Masa depan juga milikmu.</h1>
           <p>Masuk dengan Google atau email.</p>
         </div>
         <div className="join-card">
