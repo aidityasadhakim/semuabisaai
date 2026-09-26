@@ -39,7 +39,7 @@ services:
     container_name: semuabisaai-prod-caddy
     restart: unless-stopped
     environment:
-      DOMAIN_NAME: ${DOMAIN_NAME:?Set DOMAIN_NAME in the root .env}
+      DOMAIN_NAME: "${DOMAIN_NAME:?Set DOMAIN_NAME in the root .env}, http://${TAILSCALE_IP:-127.0.0.1}"
     ports:
       - "${BIND_ADDRESS:-0.0.0.0}:80:80"
       - "${BIND_ADDRESS:-0.0.0.0}:443:443"
