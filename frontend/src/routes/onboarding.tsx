@@ -142,7 +142,7 @@ export function OnboardingPage() {
     <div className="onboarding-page">
       <header className="join-header page-width">
         <Link className="wordmark" to="/">
-          semua bisa<span>ai.</span>
+          semuabisaai.id
         </Link>
       </header>
       <main className="conversation page-width">
