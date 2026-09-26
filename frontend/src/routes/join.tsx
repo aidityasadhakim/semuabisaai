@@ -47,7 +47,7 @@ function JoinWithClerk() {
           </span>
           <h2>Anda sudah masuk daftar.</h2>
           <p>
-            Kami akan mengirim kabar ke <strong>{email}</strong> saat informasi kegiatan tersedia.
+            Alamat: <strong>{email}</strong>
           </p>
         </>
       ) : (
@@ -55,7 +55,7 @@ function JoinWithClerk() {
           <p className="join-account-label">Akun terhubung</p>
           <h2>Satu langkah lagi.</h2>
           <p>
-            Konfirmasi alamat <strong>{email}</strong> untuk masuk waiting list.
+            Masuk waiting list dengan <strong>{email}</strong>.
           </p>
           <button
             className="join-link join-button"
@@ -90,32 +90,28 @@ function JoinPage() {
         <Link className="wordmark" to="/">
           semua bisa<span>ai.</span>
         </Link>
-        <Link className="back-link" to="/">
-          ← Kembali ke beranda
-        </Link>
       </header>
       <main className="join-main page-width">
         <div className="join-intro">
           <p className="eyebrow">Waiting list</p>
-          <h1>Mulai perjalananmu di sini.</h1>
-          <p>
-            Masuk dengan Google atau email, lalu konfirmasi untuk menerima kabar kegiatan Semua Bisa
-            AI.
-          </p>
+          <h1>Bergabung.</h1>
+          <p>Masuk dengan Google atau email.</p>
         </div>
         <div className="join-card">
           {isClerkConfigured() ? (
             <JoinWithClerk />
           ) : (
             <div className="join-account">
-              <h2>Clerk belum dikonfigurasi.</h2>
+              <h2>Pendaftaran belum aktif.</h2>
               <p>
-                Tambahkan <code>VITE_CLERK_PUBLISHABLE_KEY</code> di <code>frontend/.env</code>{' '}
-                untuk mengaktifkan pendaftaran.
+                Tambahkan key Clerk di <code>frontend/.env</code>.
               </p>
             </div>
           )}
         </div>
+        <Link className="back-link" to="/">
+          Kembali ke beranda
+        </Link>
       </main>
     </div>
   )

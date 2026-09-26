@@ -1,5 +1,5 @@
-# Arah visual awal
+# Arah visual
 
-Landing page menggunakan kanvas krem hangat, teks cokelat gelap, aksen terracotta, panel sage, tipografi display serif yang besar, serta tombol berbentuk pil. Arah ini mengambil prinsip editorial dan CTA langsung dari referensi Hims tanpa memakai aset, logo, atau copy Hims.
+Semua Bisa AI memakai kanvas putih hangat, teks arang, satu tombol gelap, tipografi serif besar, dan ruang kosong yang lapang. Semua teks publik rata tengah. Tidak ada ilustrasi atau blok warna dekoratif pada kerangka awal.
 
-Komposisi: navigasi ringkas, hero dua kolom dengan area media besar, pengantar singkat, tiga blok format belajar, lalu ajakan waiting list. Area media utama masih placeholder sampai foto kegiatan tersedia. Konten berada di `frontend/src/content/landing.ts`; pertahankan klaim dan jadwal hanya jika sudah terkonfirmasi.
+Urutan halaman: nama gerakan, satu gagasan utama dan CTA, dua format belajar yang ringkas, lalu footer. Copy disimpan di `frontend/src/content/landing.ts` agar mudah diganti. Halaman `/join` mengikuti komposisi dan warna yang sama.
