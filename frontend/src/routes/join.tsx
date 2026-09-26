@@ -115,7 +115,7 @@ function JoinPage() {
     <div className="join-page">
       <header className="join-header page-width">
         <Link className="wordmark" to="/">
-          semua bisa<span>ai.</span>
+          semuabisaai.id
         </Link>
       </header>
       <main className="join-main page-width">

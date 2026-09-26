@@ -6,7 +6,7 @@ function HomePage() {
   return (
     <div className="site-shell">
       <header className="site-header page-width">
-        <span className="wordmark">semua bisa ai.</span>
+        <span className="wordmark">semuabisaai.id</span>
       </header>
 
       <main>
@@ -63,7 +63,7 @@ function HomePage() {
         </section>
       </main>
 
-      <footer className="site-footer page-width">Semua Bisa AI</footer>
+      <footer className="site-footer page-width">semuabisaai.id</footer>
     </div>
   )
 }
