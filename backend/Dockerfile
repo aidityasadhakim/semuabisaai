@@ -11,13 +11,13 @@ FROM golang:1.25-alpine AS dev
 RUN apk add --no-cache git sqlite
 
 # Install Air for hot-reload
-RUN go install github.com/air-verse/air@latest
+RUN go install github.com/air-verse/air@v1.66.0
 
 # Install Goose for migrations
-RUN go install github.com/pressly/goose/v3/cmd/goose@latest
+RUN go install github.com/pressly/goose/v3/cmd/goose@v3.27.3
 
 # Install SQLC for code generation
-RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.30.0
 
 WORKDIR /app
 

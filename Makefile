@@ -19,7 +19,7 @@ endif
 
 .DEFAULT_GOAL := help
 
-.PHONY: help dev dev-backend dev-frontend down logs logs-service restart status \
+.PHONY: help dev dev-docker dev-backend dev-frontend down logs logs-service restart status \
 	goose-install db-migrate db-rollback db-status db-reset db-create \
 	sqlc sqlc-install test test-backend test-frontend lint check \
 	frontend-install frontend-build \
@@ -30,8 +30,12 @@ endif
 # Local Development
 # ================================
 
-## Start all services with hot-reload (requires Docker)
+## Start the landing page locally
 dev:
+	$(MAKE) dev-frontend
+
+## Start all services with hot-reload (requires Docker)
+dev-docker:
 	docker compose up --build
 
 ## Start all services in background
@@ -225,7 +229,8 @@ help:
 	@echo "Usage: make \033[36m<target>\033[0m"
 	@echo ""
 	@echo "\033[1mLocal Development:\033[0m"
-	@echo "  \033[36mdev\033[0m                 Start all services with hot-reload (Docker)"
+	@echo "  \033[36mdev\033[0m                 Start the landing page locally"
+	@echo "  \033[36mdev-docker\033[0m          Start all services with hot-reload (Docker)"
 	@echo "  \033[36mdev-detach\033[0m          Start all services in background"
 	@echo "  \033[36mdev-backend\033[0m         Start backend only (local, no Docker)"
 	@echo "  \033[36mdev-frontend\033[0m        Start frontend only (local, no Docker)"

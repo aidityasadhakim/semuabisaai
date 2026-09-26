@@ -7,10 +7,11 @@ Landing page awal untuk gerakan belajar AI bagi masyarakat Indonesia. Struktur h
 ```bash
 cd frontend
 bun install
-bun run dev
+cd ..
+make dev
 ```
 
-Buka http://localhost:3000. Pemeriksaan: `bun run build` dan `bun run lint`.
+Buka http://localhost:3000. Hentikan server dengan Ctrl+C pada terminal yang menjalankan `make dev`. Pemeriksaan: `cd frontend && bun run build && bun run lint`.
 
 ## Waiting list dengan Clerk
 
