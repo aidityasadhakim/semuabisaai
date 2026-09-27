@@ -108,7 +108,7 @@ func (h *Handlers) OnboardingIntro(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"reply": fallback})
 	}
 	profile, _ := json.Marshal(input)
-	reply, err := h.openRouterMessage(c, introGuideline, string(profile), 100)
+	reply, err := h.openRouterMessage(c, introGuideline, string(profile))
 	if err != nil || len([]rune(reply)) > 180 || strings.ContainsAny(reply, "?\n") || !strings.Contains(strings.ToLower(reply), strings.ToLower(input.Name)) {
 		reply = fallback
 	}
@@ -228,7 +228,7 @@ func (h *Handlers) OnboardingTurn(c echo.Context) error {
 		return c.JSON(http.StatusOK, fallback)
 	}
 	profile, _ := json.Marshal(map[string]any{"data": input, "requiredQuestion": fallback.Question})
-	raw, err := h.openRouterMessage(c, turnGuideline, string(profile), 180)
+	raw, err := h.openRouterMessage(c, turnGuideline, string(profile))
 	if err != nil {
 		return c.JSON(http.StatusOK, fallback)
 	}
@@ -410,13 +410,13 @@ func (h *Handlers) AskQuestion(c echo.Context) error {
 }
 
 func (h *Handlers) openRouterAnswer(c echo.Context, question string) (string, error) {
-	return h.openRouterMessage(c, answerGuideline, question, 350)
+	return h.openRouterMessage(c, answerGuideline, question)
 }
 
-func (h *Handlers) openRouterMessage(c echo.Context, system, message string, maxTokens int) (string, error) {
+func (h *Handlers) openRouterMessage(c echo.Context, system, message string) (string, error) {
 	payload, _ := json.Marshal(map[string]any{
 		"model":      "deepseek/deepseek-v4.1-flash:nitro",
-		"max_tokens": maxTokens,
+		"max_tokens": 200_000,
 		"messages":   []map[string]string{{"role": "system", "content": system}, {"role": "user", "content": message}},
 	})
 	req, err := http.NewRequestWithContext(c.Request().Context(), http.MethodPost, "https://openrouter.ai/api/v1/chat/completions", bytes.NewReader(payload))

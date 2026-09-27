@@ -112,7 +112,7 @@ func TestOnboardingIntroValidationAndLimit(t *testing.T) {
 	h.client = &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
 		modelCalls++
 		payload, _ := io.ReadAll(request.Body)
-		if !strings.Contains(string(payload), `"max_tokens":100`) || !strings.Contains(string(payload), "deepseek/deepseek-v4.1-flash:nitro") {
+		if !strings.Contains(string(payload), `"max_tokens":200000`) || !strings.Contains(string(payload), "deepseek/deepseek-v4.1-flash:nitro") {
 			t.Errorf("unexpected intro model payload: %s", payload)
 		}
 		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(`{"choices":[{"message":{"content":"Alya, kegiatanmu di ITB bisa jadi titik awal mencoba AI dengan bijak."}}]}`)), Header: make(http.Header)}, nil
@@ -166,7 +166,7 @@ func TestOnboardingTurnPersonalizesQuestionWithinTopic(t *testing.T) {
 	h.client = &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
 		modelCalls++
 		payload, _ := io.ReadAll(request.Body)
-		if !strings.Contains(string(payload), `"max_tokens":180`) || !strings.Contains(string(payload), "deepseek/deepseek-v4.1-flash:nitro") || !strings.Contains(string(payload), "ITB") {
+		if !strings.Contains(string(payload), `"max_tokens":200000`) || !strings.Contains(string(payload), "deepseek/deepseek-v4.1-flash:nitro") || !strings.Contains(string(payload), "ITB") {
 			t.Errorf("unexpected turn request: %s", payload)
 		}
 		content := `{"reply":"Alya, kegiatanmu di ITB terdengar menarik untuk dicoba bersama AI.","question":"Alya, kamu tinggal di kota mana sekarang?"}`
