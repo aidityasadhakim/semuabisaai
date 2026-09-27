@@ -1,6 +1,6 @@
 # Semua Bisa AI
 
-Situs gerakan kecakapan AI untuk masyarakat Indonesia. Pengunjung dapat mengikuti onboarding singkat sebagai tamu, menerima langkah awal yang sesuai jawaban mereka, lalu masuk **waiting list**. Anggota waiting list dapat bertanya hingga lima kali tentang Semua Bisa AI.
+Situs gerakan kecakapan AI untuk masyarakat Indonesia. Pengunjung dapat mengikuti onboarding percakapan sebagai tamu, lalu masuk **waiting list**. Anggota waiting list dapat bertanya hingga lima kali tentang Semua Bisa AI.
 
 ## Menjalankan lokal
 
@@ -18,12 +18,12 @@ Buka `/onboarding` untuk alur umum atau `/card?ref=aidityasadhakim` untuk alur Q
 
 ## Alur dan data
 
-- Empat jawaban pilihan disimpan bersama kode referral dan waktu pengisian untuk analitik. Onboarding tidak memerlukan akun.
-- Pendaftaran waiting list memakai akun Clerk dan tersimpan di SQLite. Anggota lama yang sebelumnya hanya tercatat di metadata Clerk perlu menekan tombol konfirmasi sekali lagi.
+- Tiga pertanyaan profil (nama, status, dan tempat kerja/kuliah/usaha) ditampilkan bersama. Setelah itu, model memberi balasan dan menyusun redaksi pertanyaan berikutnya untuk domisili, kegiatan, pengalaman AI, dan tujuan. Topik dan pilihan jawaban tetap ditentukan aplikasi; balasan dan pertanyaan cadangan tersedia jika model gagal.
+- Jawaban lengkap disimpan bersama kode referral dan waktu pengisian untuk analitik. Onboarding tidak memerlukan akun. Pendaftaran waiting list memakai akun Clerk dan tersimpan di SQLite.
 - Setelah bergabung, anggota dapat mengajukan maksimal lima pertanyaan. Setiap permintaan yang dikirim ke OpenRouter memakai satu jatah, termasuk bila penyedia gagal menjawab. Backend membatasi panjang pertanyaan dan keluaran model.
-- Model yang dipakai: `deepseek/deepseek-v4.1-flash` melalui OpenRouter. Panduan isi dan nada jawaban ada di `docs/brand-answer-guideline.md`.
+- Model yang dipakai: `deepseek/deepseek-v4.1-flash:nitro` melalui OpenRouter. Panduan isi dan nada jawaban ada di `docs/brand-answer-guideline.md`.
 
-Untuk melihat minat berdasarkan referral, profesi, dan kota, data tersedia di tabel `onboarding_sessions`. Hubungan dengan anggota yang mendaftar tersedia melalui `waitlist_members.onboarding_id`. Riwayat tanya jawab tersimpan di `visitor_questions`. Belum ada dashboard analitik.
+Untuk melihat minat berdasarkan referral, profesi, dan kota, data tersedia di tabel `onboarding_sessions`; nama, status, dan tempat kegiatan ada di `onboarding_profiles`. Hubungan dengan anggota yang mendaftar tersedia melalui `waitlist_members.onboarding_id`. Riwayat tanya jawab tersimpan di `visitor_questions`. Belum ada dashboard analitik.
 
 ## Produksi
 

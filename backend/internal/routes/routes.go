@@ -13,6 +13,7 @@ func Register(e *echo.Echo, h *handlers.Handlers, clerkSecretKey string) {
 	e.GET("/api/health", h.Health)
 	e.POST("/api/onboarding", h.SaveOnboarding)
 	e.POST("/api/onboarding/intro", h.OnboardingIntro)
+	e.POST("/api/onboarding/turn", h.OnboardingTurn)
 
 	// Protected routes (require authentication)
 	api := e.Group("/api")

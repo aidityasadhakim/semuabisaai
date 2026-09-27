@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -148,5 +149,73 @@ func TestOnboardingIntroValidationAndLimit(t *testing.T) {
 	}
 	if got := call(body); got.Code != http.StatusTooManyRequests {
 		t.Fatalf("eleventh intro: %d %s", got.Code, got.Body.String())
+	}
+}
+
+func TestOnboardingTurnPersonalizesQuestionWithinTopic(t *testing.T) {
+	database, err := db.NewConnection(context.Background(), filepath.Join(t.TempDir(), "test.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer database.Close()
+	if err := db.EnsureOnboardingSchema(context.Background(), database); err != nil {
+		t.Fatal(err)
+	}
+	h := New(database, "test-key")
+	modelCalls := 0
+	h.client = &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
+		modelCalls++
+		payload, _ := io.ReadAll(request.Body)
+		if !strings.Contains(string(payload), `"max_tokens":180`) || !strings.Contains(string(payload), "deepseek/deepseek-v4.1-flash:nitro") || !strings.Contains(string(payload), "ITB") {
+			t.Errorf("unexpected turn request: %s", payload)
+		}
+		content := `{"reply":"Alya, kegiatanmu di ITB terdengar menarik untuk dicoba bersama AI.","question":"Alya, kamu tinggal di kota mana sekarang?"}`
+		if modelCalls == 2 {
+			content = `{"reply":"Bandung memberi konteks yang pas untuk ceritamu.","question":"Apa warna favoritmu?"}`
+		}
+		if modelCalls == 3 {
+			content = `{"reply":"Belajar hal baru bisa jadi langkah awalmu, Alya.","question":"Apa lagi yang ingin kamu ketahui?"}`
+		}
+		encoded, _ := json.Marshal(map[string]any{"choices": []any{map[string]any{"message": map[string]string{"content": content}}}})
+		return &http.Response{StatusCode: 200, Body: io.NopCloser(bytes.NewReader(encoded)), Header: make(http.Header)}, nil
+	})}
+	e := echo.New()
+	call := func(body string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest(http.MethodPost, "/api/onboarding/turn", bytes.NewBufferString(body))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		if err := h.OnboardingTurn(c); err != nil {
+			e.HTTPErrorHandler(err, c)
+		}
+		return rec
+	}
+	if got := call(`{"lastStep":"profile","lastAnswer":"Alya","name":"A","status":"mahasiswa","place":"ITB"}`); got.Code != http.StatusBadRequest {
+		t.Fatalf("invalid turn: %d", got.Code)
+	}
+	first := call(`{"lastStep":"profile","lastAnswer":"Alya · Mahasiswa · ITB","name":"Alya","status":"mahasiswa","place":"ITB"}`)
+	if first.Code != http.StatusOK || !strings.Contains(first.Body.String(), "Alya, kamu tinggal di kota mana") {
+		t.Fatalf("personalized question: %d %s", first.Code, first.Body.String())
+	}
+	second := call(`{"lastStep":"city","lastAnswer":"Bandung","name":"Alya","status":"mahasiswa","place":"ITB","city":"Bandung"}`)
+	if second.Code != http.StatusOK || !strings.Contains(second.Body.String(), "bagian kuliah apa yang paling sering") || strings.Contains(second.Body.String(), "warna favoritmu") {
+		t.Fatalf("off-topic question was not replaced: %d %s", second.Code, second.Body.String())
+	}
+	final := call(`{"lastStep":"goal","lastAnswer":"Belajar hal baru","name":"Alya","status":"mahasiswa","place":"ITB","city":"Bandung","activity":"Belajar","familiarity":"Belum pernah","goal":"Belajar hal baru"}`)
+	if final.Code != http.StatusOK || !strings.Contains(final.Body.String(), `"question":""`) {
+		t.Fatalf("final turn should not ask another question: %d %s", final.Code, final.Body.String())
+	}
+	h.openRouterKey = ""
+	for i := 3; i < 30; i++ {
+		got := call(`{"lastStep":"profile","lastAnswer":"Alya · Mahasiswa · ITB","name":"Alya","status":"mahasiswa","place":"ITB"}`)
+		if got.Code != http.StatusOK {
+			t.Fatalf("turn %d: %d %s", i+1, got.Code, got.Body.String())
+		}
+	}
+	if got := call(`{"lastStep":"profile","lastAnswer":"Alya · Mahasiswa · ITB","name":"Alya","status":"mahasiswa","place":"ITB"}`); got.Code != http.StatusTooManyRequests {
+		t.Fatalf("31st turn: %d %s", got.Code, got.Body.String())
+	}
+	if modelCalls != 3 {
+		t.Fatalf("model calls = %d, want 3", modelCalls)
 	}
 }

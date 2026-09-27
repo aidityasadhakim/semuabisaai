@@ -4,28 +4,23 @@ import { useState } from 'react'
 import { apiFetch } from '@/lib/api'
 
 type AnswerKey = 'name' | 'status' | 'place' | 'city' | 'profession' | 'familiarity' | 'goal'
+type TurnKey = 'profile' | 'city' | 'profession' | 'familiarity' | 'goal'
 type Answer = { value: string; label: string }
 type Answers = Partial<Record<AnswerKey, Answer>>
-type Option = Answer
+type Turn = { key: TurnKey; question: string; answer: string; reply: string; nextQuestion: string }
 
-const steps: Array<AnswerKey> = [
-  'name',
-  'status',
-  'place',
-  'city',
-  'profession',
-  'familiarity',
-  'goal',
-]
+type TurnResponse = { reply: string; question: string }
 
-const statusOptions: Array<Option> = [
+const steps: Array<TurnKey> = ['profile', 'city', 'profession', 'familiarity', 'goal']
+
+const statusOptions: Array<Answer> = [
   { value: 'bekerja', label: 'Bekerja' },
   { value: 'mahasiswa', label: 'Mahasiswa' },
   { value: 'pengusaha', label: 'Pengusaha' },
   { value: 'lainnya', label: 'Lainnya' },
 ]
 
-const activityOptions: Record<string, Array<Option>> = {
+const activityOptions: Record<string, Array<Answer>> = {
   bekerja: [
     { value: 'guru', label: 'Mengajar' },
     { value: 'programmer', label: 'Membuat software' },
@@ -57,73 +52,93 @@ const activityOptions: Record<string, Array<Option>> = {
   ],
 }
 
-const familiarityOptions: Array<Option> = [
+const familiarityOptions: Array<Answer> = [
   { value: 'baru', label: 'Belum pernah' },
   { value: 'mencoba', label: 'Pernah mencoba' },
   { value: 'rutin', label: 'Sudah rutin' },
 ]
 
-const goalOptions: Array<Option> = [
+const goalOptions: Array<Answer> = [
   { value: 'pekerjaan', label: 'Membantu kegiatan sehari-hari' },
   { value: 'belajar', label: 'Belajar hal baru' },
   { value: 'usaha', label: 'Mengembangkan usaha' },
   { value: 'memahami', label: 'Memahami AI lebih baik' },
 ]
 
-function promptFor(key: AnswerKey, answers: Answers) {
-  const name = answers.name?.label || 'kamu'
-  const place = answers.place?.label || 'tempatmu'
+function placePrompt(status: string) {
+  if (status === 'mahasiswa') return 'Kamu kuliah di mana?'
+  if (status === 'pengusaha') return 'Apa nama usaha atau bidangmu?'
+  if (status === 'lainnya') return 'Kegiatanmu biasanya di mana?'
+  return 'Kamu bekerja di mana?'
+}
+
+function fallbackTurn(key: TurnKey, answers: Answers, lastAnswer: string): TurnResponse {
   switch (key) {
-    case 'name':
-      return 'Siapa namamu?'
-    case 'status':
-      return `Senang kenal kamu, ${name}. Saat ini kamu sedang apa?`
-    case 'place':
-      if (answers.status?.value === 'mahasiswa') return 'Kamu kuliah di mana?'
-      if (answers.status?.value === 'pengusaha') return 'Apa nama usaha atau bidangmu?'
-      if (answers.status?.value === 'lainnya') return 'Kegiatanmu biasanya di mana?'
-      return 'Kamu bekerja di mana?'
-    case 'city':
-      return 'Kamu tinggal di kota mana?'
+    case 'profile': {
+      const statusLabel = {
+        bekerja: 'pekerja',
+        mahasiswa: 'mahasiswa',
+        pengusaha: 'pengusaha',
+        lainnya: 'seseorang yang aktif berkegiatan',
+      }[answers.status?.value || 'lainnya']
+      return {
+        reply: `Senang kenal kamu, ${answers.name?.label}; sebagai ${statusLabel} di ${answers.place?.label}, keseharianmu pasti punya cerita sendiri.`,
+        question: `Agar ceritamu lebih dekat, kamu tinggal di kota mana, ${answers.name?.label}?`,
+      }
+    }
+    case 'city': {
+      const activityQuestion = {
+        mahasiswa: `Di ${answers.place?.label}, bagian kuliah apa yang paling sering kamu kerjakan?`,
+        pengusaha: `Dalam usahamu di ${answers.place?.label}, kegiatan apa yang paling sering kamu tangani?`,
+        bekerja: `Di ${answers.place?.label}, tugas apa yang paling sering kamu kerjakan?`,
+        lainnya: `Di ${answers.place?.label}, kegiatan apa yang paling sering kamu lakukan?`,
+      }[answers.status?.value || 'lainnya']
+      return {
+        reply: `Oke, ${answers.city?.label} jadi tempatmu beraktivitas saat ini.`,
+        question: activityQuestion || `Di ${answers.place?.label}, kegiatan apa yang paling sering kamu lakukan?`,
+      }
+    }
     case 'profession':
-      return `Di ${place}, apa yang paling sering kamu lakukan?`
+      return {
+        reply: `Kegiatan ${lastAnswer} di ${answers.place?.label} bisa jadi titik awal mencoba AI.`,
+        question: `Untuk kegiatan ${lastAnswer}, sudah pernah memakai AI?`,
+      }
     case 'familiarity':
-      return 'Sudah pernah memakai AI?'
+      return {
+        reply: `Baik, kamu bilang ${lastAnswer}; kita bisa mulai dari situ.`,
+        question: 'Dengan pengalaman itu, kamu ingin memakai AI untuk apa?',
+      }
     case 'goal':
-      return 'Ingin memakai AI untuk apa?'
+      return {
+        reply: `Tujuanmu ${lastAnswer}; kita bisa mulai dari langkah kecil yang berguna buatmu.`,
+        question: '',
+      }
   }
 }
 
-function optionsFor(key: AnswerKey, answers: Answers): Array<Option> | null {
-  if (key === 'status') return statusOptions
+function optionsFor(key: TurnKey, answers: Answers): Array<Answer> | null {
   if (key === 'profession') return activityOptions[answers.status?.value || 'lainnya']
   if (key === 'familiarity') return familiarityOptions
   if (key === 'goal') return goalOptions
   return null
 }
 
-function fallbackReply(answers: Answers) {
-  const status = {
-    bekerja: 'pekerja',
-    mahasiswa: 'mahasiswa',
-    pengusaha: 'pengusaha',
-    lainnya: 'seseorang yang aktif berkegiatan',
-  }[answers.status?.value || 'lainnya']
-  return `Senang kenal kamu, ${answers.name?.label}; sebagai ${status} di ${answers.place?.label}, ${answers.city?.label}, kamu bisa mulai mencoba AI dari kegiatan sehari-hari.`
-}
-
 export function OnboardingPage() {
   const referral = new URLSearchParams(window.location.search).get('ref')?.trim().slice(0, 60) || ''
+  const [profile, setProfile] = useState({ name: '', status: '', place: '' })
   const [answers, setAnswers] = useState<Answers>({})
+  const [turns, setTurns] = useState<Array<Turn>>([])
   const [step, setStep] = useState(0)
   const [draft, setDraft] = useState('')
-  const [reply, setReply] = useState('')
   const [busy, setBusy] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [error, setError] = useState('')
 
   const key = steps[step]
-  const prompt = promptFor(key, answers)
+  const latestTurn: Turn | undefined =
+    step === 0 ? undefined : turns[completed ? turns.length - 1 : step - 1]
+  const currentQuestion =
+    latestTurn?.nextQuestion || fallbackTurn(steps[step - 1] || 'profile', answers, '').question
   const options = optionsFor(key, answers)
   const greeting =
     referral.toLowerCase() === 'aidityasadhakim'
@@ -132,38 +147,81 @@ export function OnboardingPage() {
         ? `Halo! Kamu datang lewat ${referral}, ya?`
         : 'Halo! Yuk kenalan.'
 
-  async function advance(answer: Answer) {
+  async function sendTurn(
+    turnKey: TurnKey,
+    nextAnswers: Answers,
+    lastAnswer: string,
+    question: string,
+  ) {
+    const fallback = fallbackTurn(turnKey, nextAnswers, lastAnswer)
+    let response = fallback
+    try {
+      response = await apiFetch<TurnResponse>('/api/onboarding/turn', {
+        method: 'POST',
+        body: {
+          lastStep: turnKey,
+          lastAnswer,
+          name: nextAnswers.name?.value,
+          status: nextAnswers.status?.value,
+          place: nextAnswers.place?.value,
+          city: nextAnswers.city?.value || '',
+          activity: nextAnswers.profession?.label || '',
+          familiarity: nextAnswers.familiarity?.label || '',
+          goal: nextAnswers.goal?.label || '',
+        },
+      })
+    } catch {
+      // A failed model request should not prevent someone from finishing onboarding.
+    }
+    setTurns((current) => [
+      ...current.slice(0, step),
+      {
+        key: turnKey,
+        question,
+        answer: lastAnswer,
+        reply: response.reply,
+        nextQuestion: response.question,
+      },
+    ])
+    return response
+  }
+
+  async function submitProfile(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
     if (busy) return
+    const name = profile.name.trim()
+    const place = profile.place.trim()
+    if (name.length < 2 || place.length < 2 || !profile.status) return
+    const nextAnswers: Answers = {
+      name: { value: name, label: name },
+      status: statusOptions.find((option) => option.value === profile.status),
+      place: { value: place, label: place },
+    }
+    setAnswers(nextAnswers)
     setError('')
-    const nextAnswers = { ...answers, [key]: answer }
-    for (const laterKey of steps.slice(step + 1)) delete nextAnswers[laterKey]
+    setBusy(true)
+    await sendTurn(
+      'profile',
+      nextAnswers,
+      `${name} · ${nextAnswers.status?.label} · ${place}`,
+      'Tentang kamu',
+    )
+    setStep(1)
+    setBusy(false)
+  }
+
+  async function advance(answer: Answer) {
+    if (busy || step === 0) return
+    setError('')
+    const answerKey = key === 'city' ? 'city' : key
+    const nextAnswers = { ...answers, [answerKey]: answer }
+    const laterKeys: Array<AnswerKey> = ['city', 'profession', 'familiarity', 'goal']
+    for (const laterKey of laterKeys.slice(step)) delete nextAnswers[laterKey]
     setAnswers(nextAnswers)
     setDraft('')
-
-    if (key === 'city') {
-      setBusy(true)
-      try {
-        const result = await apiFetch<{ reply: string }>('/api/onboarding/intro', {
-          method: 'POST',
-          body: {
-            name: nextAnswers.name?.value,
-            status: nextAnswers.status?.value,
-            place: nextAnswers.place?.value,
-            city: nextAnswers.city?.value,
-          },
-        })
-        setReply(result.reply)
-      } catch {
-        setReply(fallbackReply(nextAnswers))
-      } finally {
-        setBusy(false)
-        setStep(step + 1)
-      }
-      return
-    }
+    setBusy(true)
 
     if (key === 'goal') {
-      setBusy(true)
       try {
         const result = await apiFetch<{ id: string }>('/api/onboarding', {
           method: 'POST',
@@ -179,34 +237,45 @@ export function OnboardingPage() {
           },
         })
         sessionStorage.setItem('sba_onboarding_id', result.id)
-        setCompleted(true)
       } catch {
         setError('Jawabanmu belum tersimpan. Coba pilih lagi.')
-      } finally {
         setBusy(false)
+        return
       }
-      return
     }
 
-    setStep(step + 1)
+    await sendTurn(key, nextAnswers, answer.label, currentQuestion)
+    if (key === 'goal') setCompleted(true)
+    else setStep(step + 1)
+    setBusy(false)
   }
 
   function submitText(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const value = draft.trim()
-    const limit = key === 'name' ? 60 : key === 'place' ? 100 : 80
-    if (value.length < 2 || value.length > limit) return
+    if (value.length < 2 || value.length > 80) return
     void advance({ value, label: value })
   }
 
   function goBack() {
     if (busy || step === 0) return
     const previous = step - 1
+    const nextAnswers = { ...answers }
+    if (previous === 0) {
+      delete nextAnswers.name
+      delete nextAnswers.status
+      delete nextAnswers.place
+    }
+    const laterKeys: Array<AnswerKey> = ['city', 'profession', 'familiarity', 'goal']
+    for (const laterKey of laterKeys.slice(Math.max(0, previous - 1))) delete nextAnswers[laterKey]
+    setAnswers(nextAnswers)
+    setTurns(turns.slice(0, previous))
+    setDraft(previous === 1 ? answers.city?.label || '' : '')
     setStep(previous)
-    setDraft(answers[steps[previous]]?.label || '')
     setError('')
-    if (previous <= 3) setReply('')
   }
+
+  const previousTurns = turns.slice(0, completed ? -1 : Math.max(0, step - 1))
 
   return (
     <div className="onboarding-page">
@@ -226,49 +295,99 @@ export function OnboardingPage() {
           />
         </div>
 
-        {step === 0 && <p className="onboarding-greeting">{greeting}</p>}
-
-        {step > 0 && (
+        {previousTurns.length > 0 && (
           <details className="onboarding-history">
-            <summary>Jawaban sebelumnya ({completed ? steps.length : step})</summary>
+            <summary>Percakapan sebelumnya ({previousTurns.length})</summary>
             <div>
-              {steps.slice(0, completed ? steps.length : step).map((previousKey) => (
-                <p key={previousKey}>
-                  <span>{promptFor(previousKey, answers)}</span>
-                  <strong>{answers[previousKey]?.label}</strong>
-                </p>
+              {previousTurns.map((turn) => (
+                <div className="onboarding-history-turn" key={turn.key}>
+                  <span>{turn.question}</span>
+                  <strong>{turn.answer}</strong>
+                  <span>{turn.reply}</span>
+                </div>
               ))}
             </div>
           </details>
         )}
 
-        {completed ? (
-          <section className="onboarding-turn onboarding-complete" aria-live="polite">
-            <h1>Terima kasih, {answers.name?.label}.</h1>
-            <p>Yuk lanjut kenalan dengan Semua Bisa AI.</p>
-            <Link className="join-link" to="/join">
-              Gabung waiting list
-            </Link>
+        {step === 0 ? (
+          <section className="onboarding-turn">
+            <p className="onboarding-greeting">{greeting}</p>
+            <h1>Kenalan dulu, yuk.</h1>
+            <form
+              className="onboarding-profile-form"
+              onSubmit={(event) => void submitProfile(event)}
+            >
+              <label htmlFor="visitor-name">Siapa namamu?</label>
+              <input
+                id="visitor-name"
+                autoComplete="given-name"
+                value={profile.name}
+                onChange={(event) => setProfile({ ...profile, name: event.target.value })}
+                maxLength={60}
+                placeholder="Nama panggilanmu"
+                required
+              />
+              <fieldset>
+                <legend>Saat ini kamu sedang apa?</legend>
+                <div className="onboarding-status-options">
+                  {statusOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      aria-pressed={profile.status === option.value}
+                      onClick={() => setProfile({ ...profile, status: option.value, place: '' })}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+              <label htmlFor="visitor-place">{placePrompt(profile.status)}</label>
+              <input
+                id="visitor-place"
+                value={profile.place}
+                onChange={(event) => setProfile({ ...profile, place: event.target.value })}
+                maxLength={100}
+                placeholder="Nama tempat atau bidangmu"
+                required
+              />
+              <button
+                className="join-link"
+                type="submit"
+                disabled={
+                  busy ||
+                  profile.name.trim().length < 2 ||
+                  !profile.status ||
+                  profile.place.trim().length < 2
+                }
+              >
+                {busy ? 'Menyiapkan percakapan...' : 'Lanjut'}
+              </button>
+            </form>
           </section>
         ) : (
           <section className="onboarding-turn" aria-live="polite">
-            {step === 4 && reply && <p className="onboarding-greeting">{reply}</p>}
-            {busy && (key === 'city' || key === 'goal') ? (
+            {latestTurn?.answer && <p className="onboarding-answer-bubble">{latestTurn.answer}</p>}
+            {latestTurn?.reply && <p className="onboarding-greeting">{latestTurn.reply}</p>}
+            {completed ? (
+              <div className="onboarding-complete">
+                <h1>Yuk lanjut, {answers.name?.label}.</h1>
+                <Link className="join-link" to="/join">
+                  Gabung waiting list
+                </Link>
+              </div>
+            ) : busy ? (
               <p className="onboarding-thinking" role="status">
-                {key === 'city' ? 'Menyusun sapaan untukmu...' : 'Menyimpan jawabanmu...'}
+                Menyiapkan balasan untukmu...
               </p>
             ) : (
               <>
-                <h1 key={key}>{prompt}</h1>
+                <h1 key={key}>{currentQuestion}</h1>
                 {options ? (
-                  <div className="onboarding-options" role="group" aria-label={prompt}>
+                  <div className="onboarding-options" role="group" aria-label={currentQuestion}>
                     {options.map((option, index) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => void advance(option)}
-                        disabled={busy}
-                      >
+                      <button key={option.value} type="button" onClick={() => void advance(option)}>
                         <span>{option.label}</span>
                         <span className="onboarding-option-key" aria-hidden="true">
                           {index + 1}
@@ -279,40 +398,26 @@ export function OnboardingPage() {
                 ) : (
                   <form className="onboarding-text-form" onSubmit={submitText}>
                     <label className="sr-only" htmlFor="onboarding-answer">
-                      {prompt}
+                      {currentQuestion}
                     </label>
                     <input
                       id="onboarding-answer"
-                      autoComplete={
-                        key === 'name' ? 'given-name' : key === 'city' ? 'address-level2' : 'off'
-                      }
+                      autoComplete="address-level2"
                       value={draft}
                       onChange={(event) => setDraft(event.target.value)}
-                      maxLength={key === 'name' ? 60 : key === 'place' ? 100 : 80}
-                      placeholder={
-                        key === 'name'
-                          ? 'Nama panggilanmu'
-                          : key === 'city'
-                            ? 'Contoh: Bandung'
-                            : 'Tulis jawabanmu'
-                      }
+                      maxLength={80}
+                      placeholder="Contoh: Bandung"
                       required
                     />
-                    <button
-                      className="join-link"
-                      type="submit"
-                      disabled={busy || draft.trim().length < 2}
-                    >
+                    <button className="join-link" type="submit" disabled={draft.trim().length < 2}>
                       Lanjut
                     </button>
                   </form>
                 )}
+                <button className="onboarding-back" type="button" onClick={goBack}>
+                  Kembali
+                </button>
               </>
-            )}
-            {step > 0 && (
-              <button className="onboarding-back" type="button" onClick={goBack} disabled={busy}>
-                Kembali
-              </button>
             )}
             {error && (
               <p className="join-error" role="alert">
