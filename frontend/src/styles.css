@@ -63,29 +63,32 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; l
 .back-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .onboarding-page { min-height: 100vh; }
 .onboarding-page .join-header { min-height: 64px; }
-.onboarding-flow { width: min(100% - 2rem, 760px); padding-block: .5rem 2rem; }
+.onboarding-flow { width: min(100% - 2rem, 680px); padding-block: 1.5rem 5rem; }
 .onboarding-progress { display: flex; justify-content: space-between; color: #66635e; font-size: .78rem; font-weight: 600; }
 .onboarding-progress-line { height: 3px; margin-top: .65rem; background: #e2dfd8; }
 .onboarding-progress-line span { display: block; height: 100%; background: #282722; }
-.onboarding-greeting { width: fit-content; margin: 1.2rem 0 1.4rem; padding: .65rem .9rem; border-radius: 1rem 1rem 1rem .25rem; background: #e8e3da; line-height: 1.5; }
-.onboarding-flow h1 { max-width: 700px; margin-bottom: .45rem; font-size: clamp(2.2rem, 4vw, 3.2rem); line-height: 1.1; }
-.onboarding-hint { margin-bottom: 1rem; color: #66635e; line-height: 1.5; }
-.onboarding-options { display: flex; flex-wrap: wrap; gap: .55rem; }
-.onboarding-options button { min-height: 44px; padding: .55rem .9rem; border: 1px solid #c8c5bd; border-radius: 999px; background: #fffefa; color: #282722; cursor: pointer; text-align: left; transition: background-color .15s ease, border-color .15s ease; }
-.onboarding-options button:hover { border-color: #282722; }
-.onboarding-options button.is-selected { border-color: #282722; background: #282722; color: #fff; }
-.onboarding-actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
-.onboarding-actions .join-link:disabled { border-color: #dfddd7; background: #e8e6e0; color: #8f8b83; cursor: not-allowed; }
-.onboarding-back { min-height: 48px; padding: .7rem 1rem; border: 0; background: none; color: #55534e; cursor: pointer; }
+.onboarding-greeting { width: fit-content; max-width: 100%; margin: 1.5rem 0; padding: .8rem 1rem; border-radius: 1rem 1rem 1rem .25rem; background: #e8e3da; line-height: 1.5; }
+.onboarding-turn { padding-top: 1.5rem; }
+.onboarding-flow h1 { max-width: 650px; margin-bottom: 1.25rem; font-size: clamp(2.2rem, 4vw, 3.2rem); line-height: 1.1; }
+.onboarding-options { display: flex; flex-direction: column; gap: .55rem; }
+.onboarding-options button { min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem 1rem; border: 1px solid #c8c5bd; border-radius: .8rem; background: #fffefa; color: #282722; cursor: pointer; text-align: left; transition: background-color .15s ease, border-color .15s ease; }
+.onboarding-options button:hover { border-color: #282722; background: #efede7; }
+.onboarding-options button:disabled { opacity: .55; cursor: wait; }
+.onboarding-option-key { color: #66635e; font-size: .75rem; }
+.onboarding-text-form { display: flex; gap: .6rem; }
+.onboarding-text-form input { min-width: 0; flex: 1; padding: .8rem 1rem; border: 1px solid #9c998f; border-radius: .75rem; background: #fffefa; color: #282722; font: inherit; }
+.onboarding-text-form input:focus-visible { outline: 2px solid #282722; outline-offset: 3px; }
+.onboarding-text-form .join-link:disabled { opacity: .5; cursor: not-allowed; }
+.onboarding-back { min-height: 44px; margin-top: 1.25rem; padding: .5rem 0; border: 0; background: none; color: #55534e; cursor: pointer; }
 .onboarding-back:hover { text-decoration: underline; text-underline-offset: 4px; }
-.onboarding-privacy { margin-top: 1.5rem; color: #66635e; font-size: .8rem; line-height: 1.5; }
-.onboarding-history { margin: -1rem 0 1.75rem; color: #55534e; font-size: .85rem; }
+.onboarding-thinking { margin-top: 1.5rem; color: #55534e; }
+.onboarding-history { margin: 1.5rem 0 0; color: #55534e; font-size: .85rem; }
 .onboarding-history summary { width: fit-content; cursor: pointer; }
 .onboarding-history div { margin-top: .7rem; padding: .7rem 1rem; border-radius: .75rem; background: #efede7; }
 .onboarding-history p { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .45rem; }
 .onboarding-history p:last-child { margin-bottom: 0; }
 .onboarding-history strong { color: #282722; text-align: right; }
-.onboarding-complete .onboarding-tip { max-width: 55ch; margin-bottom: 1.5rem; font-size: 1.2rem; line-height: 1.6; }
+.onboarding-complete p { margin-bottom: 1.5rem; color: #55534e; }
 .conversation { width: min(100% - 2rem, 740px); padding-block: clamp(1.5rem, 4vw, 3rem) 5rem; }
 .conversation > h1 { font-size: clamp(2.7rem, 5vw, 4.3rem); line-height: 1.07; margin-bottom: .6rem; }
 .about-ai { margin: 1.5rem 0 2rem; padding: 1.25rem 1.5rem; border-radius: 1rem; background: #efede7; }
@@ -108,10 +111,11 @@ code { overflow-wrap: anywhere; font-size: .9em; }
   .onboarding-flow { padding-top: .5rem; }
   .onboarding-greeting { margin-block: 1rem 1.35rem; }
   .onboarding-flow h1 { font-size: clamp(2.4rem, 10vw, 3.2rem); }
-  .onboarding-options { gap: .55rem; }
-  .onboarding-options button { min-height: 44px; padding: .6rem .9rem; }
-  .onboarding-actions { margin-top: 1.5rem; }
-  .onboarding-privacy { margin-top: 1.75rem; }
+  .onboarding-options button { min-height: 50px; }
+  .onboarding-text-form { flex-direction: column; align-items: stretch; }
+  .onboarding-text-form .join-link { align-self: flex-start; }
+  .onboarding-history p { flex-direction: column; gap: .15rem; }
+  .onboarding-history strong { text-align: left; }
   .page-width { width: min(100% - 2rem, 1120px); }
   .site-header, .join-header { min-height: 80px; }
   .hero { padding-block: 4.5rem 5rem; }

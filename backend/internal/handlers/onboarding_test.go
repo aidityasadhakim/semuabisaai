@@ -56,9 +56,16 @@ func TestOnboardingAndQuestionLimit(t *testing.T) {
 		}
 		return rec
 	}
-	result := call(`{"referral":"aidityasadhakim","profession":"guru","familiarity":"baru","goal":"belajar","city":"jakarta"}`, "", h.SaveOnboarding)
+	result := call(`{"referral":"aidityasadhakim","name":"Alya","status":"bekerja","place":"Sekolah Negeri","profession":"guru","familiarity":"baru","goal":"belajar","city":"Jakarta"}`, "", h.SaveOnboarding)
 	if result.Code != http.StatusCreated {
 		t.Fatalf("onboarding: %d %s", result.Code, result.Body.String())
+	}
+	var storedName, storedStatus, storedPlace string
+	if err := database.QueryRow(`SELECT name, status, place FROM onboarding_profiles LIMIT 1`).Scan(&storedName, &storedStatus, &storedPlace); err != nil {
+		t.Fatal(err)
+	}
+	if storedName != "Alya" || storedStatus != "bekerja" || storedPlace != "Sekolah Negeri" {
+		t.Fatalf("stored profile: %q, %q, %q", storedName, storedStatus, storedPlace)
 	}
 	if got := call(`{"profession":"invalid"}`, "", h.SaveOnboarding); got.Code != http.StatusBadRequest {
 		t.Fatalf("invalid answer: %d", got.Code)
@@ -87,5 +94,59 @@ func TestOnboardingAndQuestionLimit(t *testing.T) {
 	}
 	if requests != 5 {
 		t.Fatalf("OpenRouter calls = %d, want 5", requests)
+	}
+}
+
+func TestOnboardingIntroValidationAndLimit(t *testing.T) {
+	database, err := db.NewConnection(context.Background(), filepath.Join(t.TempDir(), "test.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer database.Close()
+	if err := db.EnsureOnboardingSchema(context.Background(), database); err != nil {
+		t.Fatal(err)
+	}
+	h := New(database, "test-key")
+	modelCalls := 0
+	h.client = &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
+		modelCalls++
+		payload, _ := io.ReadAll(request.Body)
+		if !strings.Contains(string(payload), `"max_tokens":100`) || !strings.Contains(string(payload), "deepseek/deepseek-v4.1-flash:nitro") {
+			t.Errorf("unexpected intro model payload: %s", payload)
+		}
+		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(`{"choices":[{"message":{"content":"Alya, kegiatanmu di ITB bisa jadi titik awal mencoba AI dengan bijak."}}]}`)), Header: make(http.Header)}, nil
+	})}
+	e := echo.New()
+	call := func(body string) *httptest.ResponseRecorder {
+		req := httptest.NewRequest(http.MethodPost, "/api/onboarding/intro", bytes.NewBufferString(body))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		if err := h.OnboardingIntro(c); err != nil {
+			e.HTTPErrorHandler(err, c)
+		}
+		return rec
+	}
+	if got := call(`{"name":"A","status":"bekerja","place":"Kantor","city":"Bandung"}`); got.Code != http.StatusBadRequest {
+		t.Fatalf("invalid profile: %d", got.Code)
+	}
+	body := `{"name":"Alya","status":"mahasiswa","place":"ITB","city":"Bandung"}`
+	for i := 0; i < 10; i++ {
+		got := call(body)
+		if got.Code != http.StatusOK || !strings.Contains(got.Body.String(), "Alya") {
+			t.Fatalf("intro %d: %d %s", i+1, got.Code, got.Body.String())
+		}
+		if i == 0 {
+			if !strings.Contains(got.Body.String(), "ITB bisa jadi titik awal") {
+				t.Fatalf("model reply was not returned: %s", got.Body.String())
+			}
+			h.openRouterKey = ""
+		}
+	}
+	if modelCalls != 1 {
+		t.Fatalf("intro model calls = %d, want 1", modelCalls)
+	}
+	if got := call(body); got.Code != http.StatusTooManyRequests {
+		t.Fatalf("eleventh intro: %d %s", got.Code, got.Body.String())
 	}
 }
