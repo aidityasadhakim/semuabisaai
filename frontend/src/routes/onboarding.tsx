@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 import { apiFetch } from '@/lib/api'
 
@@ -10,11 +10,11 @@ type Answers = Partial<Record<AnswerKey, Answer>>
 const questions: Array<{ key: AnswerKey; text: string; options: Array<Answer> }> = [
   {
     key: 'profession',
-    text: 'Saat ini, kegiatan utamamu apa?',
+    text: 'Apa kegiatan utamamu?',
     options: [
       { value: 'guru', label: 'Mengajar' },
-      { value: 'akuntan', label: 'Akuntansi atau keuangan' },
-      { value: 'programmer', label: 'Membuat perangkat lunak' },
+      { value: 'akuntan', label: 'Keuangan' },
+      { value: 'programmer', label: 'Membuat software' },
       { value: 'pns', label: 'Pelayanan publik' },
       { value: 'wirausaha', label: 'Menjalankan usaha' },
       { value: 'swasta', label: 'Bekerja di perusahaan' },
@@ -23,26 +23,26 @@ const questions: Array<{ key: AnswerKey; text: string; options: Array<Answer> }>
   },
   {
     key: 'familiarity',
-    text: 'Sejauh mana kamu sudah menggunakan AI?',
+    text: 'Sudah pernah pakai AI?',
     options: [
-      { value: 'baru', label: 'Belum pernah atau baru ingin mencoba' },
-      { value: 'mencoba', label: 'Pernah mencoba beberapa kali' },
-      { value: 'rutin', label: 'Sudah cukup rutin' },
+      { value: 'baru', label: 'Belum pernah' },
+      { value: 'mencoba', label: 'Pernah mencoba' },
+      { value: 'rutin', label: 'Sudah rutin' },
     ],
   },
   {
     key: 'goal',
-    text: 'Apa yang paling ingin kamu capai dengan AI?',
+    text: 'Ingin pakai AI untuk apa?',
     options: [
-      { value: 'pekerjaan', label: 'Membantu pekerjaan sehari-hari' },
+      { value: 'pekerjaan', label: 'Membantu pekerjaan' },
       { value: 'belajar', label: 'Belajar hal baru' },
-      { value: 'usaha', label: 'Mengembangkan usaha atau ide' },
-      { value: 'memahami', label: 'Memahami peluang dan risikonya' },
+      { value: 'usaha', label: 'Mengembangkan usaha' },
+      { value: 'memahami', label: 'Memahami AI' },
     ],
   },
   {
     key: 'city',
-    text: 'Kota mana yang paling dekat denganmu?',
+    text: 'Kamu tinggal dekat kota mana?',
     options: [
       { value: 'jakarta', label: 'Jakarta' },
       { value: 'bandung', label: 'Bandung' },
@@ -56,36 +56,20 @@ const questions: Array<{ key: AnswerKey; text: string; options: Array<Answer> }>
 ]
 
 const firstSteps: Record<string, string> = {
-  guru: 'Coba minta AI membuat tiga cara menjelaskan satu topik kepada murid dengan tingkat pemahaman berbeda. Periksa kembali ketepatan materinya.',
-  akuntan:
-    'Coba gunakan AI untuk merangkum aturan atau laporan yang tidak rahasia, lalu cocokkan setiap poin penting dengan sumber aslinya.',
-  programmer:
-    'Coba minta AI meninjau satu fungsi kecil dan menjelaskan asumsi serta kemungkinan kesalahannya. Tetap jalankan pengujian sendiri.',
-  pns: 'Coba gunakan AI untuk menyusun draf penjelasan layanan publik dari informasi yang sudah terbuka. Periksa aturan resmi sebelum membagikannya.',
-  wirausaha:
-    'Coba gunakan AI untuk memetakan tiga pertanyaan pelanggan yang paling sering muncul, lalu tulis jawaban dengan suara usahamu sendiri.',
-  swasta:
-    'Coba pilih satu tugas berulang yang tidak memuat data sensitif dan minta AI membantu menyusun langkah kerjanya.',
-  lainnya:
-    'Coba pilih satu tugas kecil dalam kegiatanmu, lalu minta AI memberi beberapa pendekatan. Periksa hasilnya sebelum digunakan.',
+  guru: 'Coba minta AI menjelaskan satu topik dengan cara yang berbeda untuk muridmu.',
+  akuntan: 'Coba minta AI merangkum dokumen yang tidak rahasia, lalu cek sumbernya.',
+  programmer: 'Coba minta AI meninjau satu fungsi kecil, lalu uji sarannya.',
+  pns: 'Coba minta AI menyusun draf informasi layanan dari sumber yang terbuka.',
+  wirausaha: 'Coba minta AI membantu menjawab pertanyaan pelanggan yang sering muncul.',
+  swasta: 'Coba pilih satu tugas berulang dan minta AI membantu menyusun langkahnya.',
+  lainnya: 'Coba pilih satu tugas kecil dan minta AI memberi beberapa cara mengerjakannya.',
 }
 
-const goalFocus: Record<string, string> = {
-  pekerjaan: 'Fokuskan percobaanmu pada satu alur kerja yang sering kamu ulang.',
-  belajar: 'Catat apa yang kamu pahami dan bagian yang masih perlu diperiksa dari sumber lain.',
-  usaha: 'Mulailah dari kebutuhan pelanggan yang paling sering kamu dengar.',
-  memahami: 'Bandingkan contoh hasil AI yang berguna dan yang keliru agar kamu mengenali batasnya.',
-}
-
-function feedbackFor(answers: Answers) {
-  const familiarity = answers.familiarity?.value
-  const opening =
-    familiarity === 'baru'
-      ? 'Kamu tidak perlu menjadi ahli untuk mulai. Mulailah dari satu tugas yang kamu kenal.'
-      : familiarity === 'rutin'
-        ? 'Kamu sudah punya kebiasaan memakai AI. Langkah berikutnya adalah membuat alur kerja yang lebih sadar dan terukur.'
-        : 'Kamu sudah mencoba AI. Sekarang saatnya mengubah percobaan itu menjadi kebiasaan yang benar-benar membantu.'
-  return `${opening} ${firstSteps[answers.profession?.value || 'lainnya']} ${goalFocus[answers.goal?.value || 'memahami']} Ingat: jangan masukkan data pribadi atau rahasia tanpa izin, dan selalu periksa hasil AI.`
+const goalHints: Record<string, string> = {
+  pekerjaan: 'Mulai dari tugas yang paling sering kamu ulang.',
+  belajar: 'Bandingkan jawabannya dengan sumber yang kamu percaya.',
+  usaha: 'Mulai dari kebutuhan pelanggan yang kamu kenal.',
+  memahami: 'Perhatikan kapan AI membantu dan kapan ia keliru.',
 }
 
 export function OnboardingPage() {
@@ -95,44 +79,40 @@ export function OnboardingPage() {
   const [saving, setSaving] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [error, setError] = useState('')
-  const endRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (step === 0 && !completed) return
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    endRef.current?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'end' })
-  }, [step, completed])
-  const fromAidityas = referral.toLowerCase() === 'aidityasadhakim'
-  const greeting = fromAidityas
-    ? 'Halo, sepertinya kamu datang melalui Aidityas Adhakim. Selamat datang di Semua Bisa AI.'
-    : referral
-      ? `Halo, sepertinya kamu datang melalui ${referral}. Selamat datang di Semua Bisa AI.`
-      : 'Halo, selamat datang di Semua Bisa AI.'
+  const currentQuestion = questions[step]
+  const selected = answers[currentQuestion.key]
+  const greeting =
+    referral.toLowerCase() === 'aidityasadhakim'
+      ? 'Halo! Kamu datang lewat Aidityas Adhakim, ya?'
+      : referral
+        ? `Halo! Kamu datang lewat ${referral}, ya?`
+        : 'Halo! Yuk mulai.'
 
-  async function choose(option: Answer) {
-    const next = { ...answers, [questions[step].key]: option }
-    setAnswers(next)
+  async function continueOnboarding() {
+    if (!selected || saving) return
     setError('')
     if (step < questions.length - 1) {
       setStep(step + 1)
       return
     }
+
     setSaving(true)
     try {
       const result = await apiFetch<{ id: string }>('/api/onboarding', {
         method: 'POST',
         body: {
           referral,
-          profession: next.profession?.value,
-          familiarity: next.familiarity?.value,
-          goal: next.goal?.value,
-          city: next.city?.value,
+          profession: answers.profession?.value,
+          familiarity: answers.familiarity?.value,
+          goal: answers.goal?.value,
+          city: answers.city?.value,
         },
       })
       sessionStorage.setItem('sba_onboarding_id', result.id)
       setCompleted(true)
     } catch {
-      setError('Jawaban belum berhasil disimpan. Pilih jawaban sekali lagi untuk mencoba.')
+      setError('Belum tersimpan. Coba lagi.')
     } finally {
       setSaving(false)
     }
@@ -145,78 +125,88 @@ export function OnboardingPage() {
           semuabisaai.id
         </Link>
       </header>
-      <main className="conversation page-width">
-        <p className="section-label">Kenalan sebentar</p>
-        <h1>Mulai dari ceritamu.</h1>
-        <p className="conversation-intro">
-          Empat pilihan singkat untuk menemukan langkah awal yang cocok buatmu.
-        </p>
-        <p className="conversation-privacy">
-          Jawabanmu disimpan untuk memahami kebutuhan peserta dan merancang kegiatan. Jangan
-          masukkan informasi pribadi atau rahasia.
-        </p>
-        <div className="conversation-thread" aria-live="polite">
-          <p className="chat-bubble chat-guide">{greeting}</p>
-          {questions.map((question, index) => {
-            const answer = answers[question.key]
-            if (index > step || (completed && !answer)) return null
-            return (
-              <div className="chat-exchange" key={question.key}>
-                <p className="chat-bubble chat-guide">{question.text}</p>
-                {answer && <p className="chat-bubble chat-answer">{answer.label}</p>}
-                {index === step && !completed && !answer && (
-                  <div className="chat-options" aria-label="Pilihan jawaban">
-                    {question.options.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => choose(option)}
-                        disabled={saving}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {index === step && !completed && answer && error && (
-                  <div className="chat-options">
-                    {question.options.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => choose(option)}
-                        disabled={saving}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-          {saving && <p className="chat-status">Menyimpan jawabanmu...</p>}
-          {error && (
-            <p className="join-error" role="alert">
-              {error}
-            </p>
-          )}
-          {completed && (
-            <div className="onboarding-result">
-              <p className="section-label">Langkah awalmu</p>
-              <h2>AI bisa dimulai dari hal yang dekat.</h2>
-              <p>{feedbackFor(answers)}</p>
-              <p>
-                Ingin mendapat kabar saat kegiatan Semua Bisa AI tersedia? Masuk waiting list, lalu
-                kamu bisa mengajukan sampai lima pertanyaan tentang gerakan ini.
-              </p>
-              <Link className="join-link" to="/join">
-                Masuk waiting list
-              </Link>
-            </div>
-          )}
-          <div ref={endRef} />
+      <main className="onboarding-flow page-width">
+        <div className="onboarding-progress">
+          <span>Kenalan singkat</span>
+          <span>{completed ? 'Selesai' : `${step + 1} / ${questions.length}`}</span>
         </div>
+        <div className="onboarding-progress-line" aria-hidden="true">
+          <span
+            style={{
+              width: `${((completed ? questions.length : step + 1) / questions.length) * 100}%`,
+            }}
+          />
+        </div>
+
+        <p className="onboarding-greeting">{greeting}</p>
+
+        {completed ? (
+          <div className="onboarding-complete">
+            <h1>Langkah pertamamu</h1>
+            <p className="onboarding-tip">{firstSteps[answers.profession?.value || 'lainnya']}</p>
+            <p className="onboarding-hint">{goalHints[answers.goal?.value || 'memahami']}</p>
+            <Link className="join-link" to="/join">
+              Masuk waiting list
+            </Link>
+            <p className="onboarding-after">
+              Setelah bergabung, kamu bisa bertanya tentang Semua Bisa AI.
+            </p>
+          </div>
+        ) : (
+          <>
+            {step > 0 && (
+              <details className="onboarding-history">
+                <summary>Jawaban sebelumnya ({step})</summary>
+                <div>
+                  {questions.slice(0, step).map((question) => (
+                    <p key={question.key}>
+                      <span>{question.text}</span>
+                      <strong>{answers[question.key]?.label}</strong>
+                    </p>
+                  ))}
+                </div>
+              </details>
+            )}
+            <h1 key={currentQuestion.key}>{currentQuestion.text}</h1>
+            <p className="onboarding-hint">Pilih satu yang paling cocok.</p>
+            <div className="onboarding-options" role="group" aria-label={currentQuestion.text}>
+              {currentQuestion.options.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={selected?.value === option.value ? 'is-selected' : ''}
+                  aria-pressed={selected?.value === option.value}
+                  onClick={() => setAnswers({ ...answers, [currentQuestion.key]: option })}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+            <div className="onboarding-actions">
+              {step > 0 && (
+                <button className="onboarding-back" type="button" onClick={() => setStep(step - 1)}>
+                  Kembali
+                </button>
+              )}
+              <button
+                className="join-link"
+                type="button"
+                onClick={continueOnboarding}
+                disabled={!selected || saving}
+              >
+                {saving ? 'Menyimpan...' : step === questions.length - 1 ? 'Lihat hasil' : 'Lanjut'}
+              </button>
+            </div>
+            {error && (
+              <p className="join-error" role="alert">
+                {error}
+              </p>
+            )}
+          </>
+        )}
+        <p className="onboarding-privacy">
+          Pilihanmu membantu kami merancang kegiatan yang sesuai.
+        </p>
       </main>
     </div>
   )

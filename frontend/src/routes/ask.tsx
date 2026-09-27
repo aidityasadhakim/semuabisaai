@@ -95,11 +95,8 @@ function QuestionsWithClerk() {
   return (
     <>
       <p className="ask-count">{remaining} dari 5 pertanyaan tersisa</p>
-      <p className="ask-intro">
-        Tanyakan tentang gerakan Semua Bisa AI. Jawaban dibuat oleh AI dan mungkin perlu diperiksa
-        kembali.
-      </p>
       <div className="conversation-thread" aria-live="polite">
+        <p className="chat-bubble chat-guide">Apa yang ingin kamu tahu tentang Semua Bisa AI?</p>
         {replies.map((reply, index) => (
           <div className="chat-exchange" key={index}>
             <p className="chat-bubble chat-answer">{reply.question}</p>
@@ -109,15 +106,17 @@ function QuestionsWithClerk() {
       </div>
       {remaining > 0 ? (
         <form className="ask-form" onSubmit={ask}>
-          <label htmlFor="visitor-question">Pertanyaanmu</label>
+          <label className="sr-only" htmlFor="visitor-question">
+            Pertanyaanmu
+          </label>
           <textarea
             id="visitor-question"
             value={question}
             onChange={(event) => setQuestion(event.target.value)}
             minLength={3}
             maxLength={500}
-            rows={4}
-            placeholder="Contoh: Apakah saya harus bisa coding untuk ikut?"
+            rows={3}
+            placeholder="Tulis pertanyaanmu..."
             required
           />
           <button
@@ -151,8 +150,7 @@ function AskPage() {
         </Link>
       </header>
       <main className="conversation page-width">
-        <p className="section-label">Tanya jawab</p>
-        <h1>Masih penasaran?</h1>
+        <h1>Tanya yuk.</h1>
         {isClerkConfigured() ? <QuestionsWithClerk /> : <p>Tanya jawab belum tersedia.</p>}
       </main>
     </div>
