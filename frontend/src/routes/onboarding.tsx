@@ -65,13 +65,6 @@ const firstSteps: Record<string, string> = {
   lainnya: 'Coba pilih satu tugas kecil dan minta AI memberi beberapa cara mengerjakannya.',
 }
 
-const goalHints: Record<string, string> = {
-  pekerjaan: 'Mulai dari tugas yang paling sering kamu ulang.',
-  belajar: 'Bandingkan jawabannya dengan sumber yang kamu percaya.',
-  usaha: 'Mulai dari kebutuhan pelanggan yang kamu kenal.',
-  memahami: 'Perhatikan kapan AI membantu dan kapan ia keliru.',
-}
-
 export function OnboardingPage() {
   const referral = new URLSearchParams(window.location.search).get('ref')?.trim().slice(0, 60) || ''
   const [answers, setAnswers] = useState<Answers>({})
@@ -142,15 +135,11 @@ export function OnboardingPage() {
 
         {completed ? (
           <div className="onboarding-complete">
-            <h1>Langkah pertamamu</h1>
+            <h1>Coba ini dulu.</h1>
             <p className="onboarding-tip">{firstSteps[answers.profession?.value || 'lainnya']}</p>
-            <p className="onboarding-hint">{goalHints[answers.goal?.value || 'memahami']}</p>
             <Link className="join-link" to="/join">
-              Masuk waiting list
+              Gabung waiting list
             </Link>
-            <p className="onboarding-after">
-              Setelah bergabung, kamu bisa bertanya tentang Semua Bisa AI.
-            </p>
           </div>
         ) : (
           <>
@@ -204,9 +193,11 @@ export function OnboardingPage() {
             )}
           </>
         )}
-        <p className="onboarding-privacy">
-          Pilihanmu membantu kami merancang kegiatan yang sesuai.
-        </p>
+        {!completed && (
+          <p className="onboarding-privacy">
+            Pilihanmu membantu kami merancang kegiatan yang sesuai.
+          </p>
+        )}
       </main>
     </div>
   )

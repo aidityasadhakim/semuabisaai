@@ -41,7 +41,12 @@ if (!rootElement.innerHTML) {
   if (clerkPubKey) {
     root.render(
       <StrictMode>
-        <ClerkProvider publishableKey={clerkPubKey} localization={idID}>
+        <ClerkProvider
+          publishableKey={clerkPubKey}
+          localization={idID}
+          signInForceRedirectUrl="/join"
+          signUpForceRedirectUrl="/join"
+        >
           <QueryClientProvider client={queryClient}>
             <RouterProvider router={router} />
           </QueryClientProvider>

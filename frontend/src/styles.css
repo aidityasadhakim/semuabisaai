@@ -83,11 +83,13 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; l
 .onboarding-history p { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .45rem; }
 .onboarding-history p:last-child { margin-bottom: 0; }
 .onboarding-history strong { color: #282722; text-align: right; }
-.onboarding-complete .onboarding-tip { max-width: 55ch; margin-bottom: .7rem; font-size: 1.2rem; line-height: 1.6; }
-.onboarding-complete .onboarding-hint { margin-bottom: 2rem; }
-.onboarding-after { margin-top: 1rem; color: #66635e; font-size: .85rem; }
+.onboarding-complete .onboarding-tip { max-width: 55ch; margin-bottom: 1.5rem; font-size: 1.2rem; line-height: 1.6; }
 .conversation { width: min(100% - 2rem, 740px); padding-block: clamp(1.5rem, 4vw, 3rem) 5rem; }
 .conversation > h1 { font-size: clamp(2.7rem, 5vw, 4.3rem); line-height: 1.07; margin-bottom: .6rem; }
+.about-ai { margin: 1.5rem 0 2rem; padding: 1.25rem 1.5rem; border-radius: 1rem; background: #efede7; }
+.about-ai p { margin-bottom: 1rem; line-height: 1.55; }
+.about-ai ul { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.about-ai li { padding: .45rem .75rem; border: 1px solid #c8c5bd; border-radius: 999px; font-size: .85rem; }
 .conversation-thread { display: flex; flex-direction: column; gap: 1.1rem; }
 .chat-exchange { display: flex; flex-direction: column; gap: .7rem; }
 .chat-bubble { max-width: 88%; width: fit-content; margin: 0; padding: .95rem 1.2rem; border-radius: 1.2rem; line-height: 1.55; white-space: pre-wrap; }

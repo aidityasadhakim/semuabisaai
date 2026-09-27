@@ -1,6 +1,27 @@
+import { useAuth } from '@clerk/react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 
 import { landing } from '@/content/landing'
+import { isClerkConfigured } from '@/lib/clerk'
+
+function SignedInAwareCta() {
+  const { isSignedIn } = useAuth()
+  return (
+    <Link className="join-link" to={isSignedIn ? '/join' : '/onboarding'}>
+      {isSignedIn ? 'Kamu Sudah Tergabung' : 'Mulai dari ceritamu'}
+    </Link>
+  )
+}
+
+function LandingCta() {
+  return isClerkConfigured() ? (
+    <SignedInAwareCta />
+  ) : (
+    <Link className="join-link" to="/onboarding">
+      Mulai dari ceritamu
+    </Link>
+  )
+}
 
 function HomePage() {
   return (
@@ -13,9 +34,7 @@ function HomePage() {
         <section className="hero page-width" aria-labelledby="hero-title">
           <h1 id="hero-title">{landing.heroTitle}</h1>
           <p className="hero-body">{landing.heroBody}</p>
-          <Link className="join-link" to="/onboarding">
-            Mulai dari ceritamu
-          </Link>
+          <LandingCta />
         </section>
 
         <section className="vision" aria-labelledby="vision-title">
@@ -57,9 +76,7 @@ function HomePage() {
         <section className="closing section-inner page-width" aria-labelledby="closing-title">
           <h2 id="closing-title">{landing.closingTitle}</h2>
           <p>{landing.closingBody}</p>
-          <Link className="join-link" to="/onboarding">
-            Mulai dari ceritamu
-          </Link>
+          <LandingCta />
         </section>
       </main>
 

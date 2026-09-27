@@ -150,7 +150,16 @@ function AskPage() {
         </Link>
       </header>
       <main className="conversation page-width">
-        <h1>Tanya yuk.</h1>
+        <h1>Kenalan dulu, yuk.</h1>
+        <section className="about-ai" aria-label="Tentang Semua Bisa AI">
+          <p>Semua Bisa AI membantu siapa pun memakai AI dengan percaya diri dalam keseharian.</p>
+          <ul>
+            <li>Terbuka untuk semua</li>
+            <li>Belajar lewat hasil nyata</li>
+            <li>Manusia tetap memegang kendali</li>
+            <li>Gunakan AI dengan aman dan bijak</li>
+          </ul>
+        </section>
         {isClerkConfigured() ? <QuestionsWithClerk /> : <p>Tanya jawab belum tersedia.</p>}
       </main>
     </div>
