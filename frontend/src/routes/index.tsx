@@ -80,7 +80,6 @@ function HomePage() {
         </section>
       </main>
 
-      <footer className="site-footer page-width">semuabisaai.id</footer>
     </div>
   )
 }

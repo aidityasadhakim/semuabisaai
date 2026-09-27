@@ -16,6 +16,10 @@ function RootComponent() {
         <Outlet />
       </main>
 
+      <footer className="site-footer page-width">
+        Kontak: <a href="mailto:halo@semuabisaai.id">halo@semuabisaai.id</a>
+      </footer>
+
       {/* Dev tools (only in development) */}
       <TanStackRouterDevtools position="bottom-right" />
       <ReactQueryDevtools buttonPosition="bottom-left" />
